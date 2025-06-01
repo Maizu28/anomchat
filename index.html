@@ -1,32 +1,24 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Anonim Grup (Supabase + Netlify)</title>
+    <title>Anonymous Group Chat</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </head>
 <body>
-    <div class="chat-container">
-        <h1>Chat Anonim Grup</h1>
-        <div class="nickname-container">
-            <label for="nickname">Nickname:</label>
-            <input type="text" id="nickname" placeholder="Masukkan nickname Anda...">
-            <button id="setNickname">Set Nickname</button>
+    <div class="container">
+        <h1>👻 Anonymous Chat Room</h1>
+        <div id="chat-box">
+            </div>
+        <div id="input-area">
+            <input type="text" id="nickname" placeholder="Enter your nickname (optional)">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="send-button">Send</button>
         </div>
-
-        <div id="messages-area">
-            <div class="loading-placeholder">Memuat pesan...</div>
-        </div>
-
-        <div class="input-area">
-            <input type="text" id="message-input" placeholder="Ketik pesan Anda..." disabled>
-            <button id="send-button" disabled>Kirim</button>
-        </div>
-        <div class="status-indicator" id="statusIndicator">Menghubungkan...</div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
