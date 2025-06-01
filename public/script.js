@@ -110,21 +110,40 @@ document.addEventListener('DOMContentLoaded', () => {
       messageElement.classList.add('received');
     }
     
-    // Add click event for reply
-    messageElement.addEventListener('click', () => {
-      if (data.username !== username) { // Can't reply to own messages
-        replyingTo = {
-          id: data.id,
-          username: data.username,
-          message: data.message
-        };
-        showReplyModal(data.username, data.message);
+    // Long press functionality
+    let pressTimer;
+    const longPressDuration = 500; // 0.5 seconds
+    
+    // Desktop events
+    messageElement.addEventListener('mousedown', (e) => {
+      if (data.username !== username) {
+        pressTimer = setTimeout(() => {
+          showReplyOptions(data, e);
+        }, longPressDuration);
       }
     });
     
-    const usernameElement = document.createElement('div');
-    usernameElement.classList.add('message-username');
-    usernameElement.textContent = data.username;
+    messageElement.addEventListener('mouseup', () => {
+      clearTimeout(pressTimer);
+    });
+    
+    messageElement.addEventListener('mouseleave', () => {
+      clearTimeout(pressTimer);
+    });
+    
+    // Mobile events
+    messageElement.addEventListener('touchstart', (e) => {
+      if (data.username !== username) {
+        pressTimer = setTimeout(() => {
+          showReplyOptions(data, e);
+        }, longPressDuration);
+        e.preventDefault();
+      }
+    });
+    
+    messageElement.addEventListener('touchend', () => {
+      clearTimeout(pressTimer);
+    });
     
     // Add reply preview if exists
     if (data.reply_username) {
@@ -150,6 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
       messageElement.appendChild(replyPreview);
     }
     
+    const usernameElement = document.createElement('div');
+    usernameElement.classList.add('message-username');
+    usernameElement.textContent = data.username;
+    
     const contentElement = document.createElement('div');
     contentElement.classList.add('message-content');
     contentElement.textContent = data.message;
@@ -165,9 +188,49 @@ document.addEventListener('DOMContentLoaded', () => {
     chatMessages.appendChild(messageElement);
     
     if (isNew) {
-      // Scroll to bottom for new messages
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
+  }
+  
+  function showReplyOptions(data, event) {
+    // Remove any existing popup
+    const existingPopup = document.querySelector('.reply-popup');
+    if (existingPopup) {
+      existingPopup.remove();
+    }
+    
+    // Create new popup
+    const popup = document.createElement('div');
+    popup.className = 'reply-popup';
+    popup.innerHTML = `<button class="reply-button">Reply</button>`;
+    
+    // Position the popup near the pressed message
+    const rect = event.target.getBoundingClientRect();
+    popup.style.left = `${rect.left}px`;
+    popup.style.top = `${rect.top - 45}px`;
+    
+    document.body.appendChild(popup);
+    
+    // Handle reply button click
+    popup.querySelector('.reply-button').addEventListener('click', () => {
+      replyingTo = {
+        id: data.id,
+        username: data.username,
+        message: data.message
+      };
+      showReplyModal(data.username, data.message);
+      popup.remove();
+    });
+    
+    // Close popup when clicking outside
+    setTimeout(() => {
+      document.addEventListener('click', function closePopup(e) {
+        if (!popup.contains(e.target)) {
+          popup.remove();
+          document.removeEventListener('click', closePopup);
+        }
+      });
+    }, 0);
   }
   
   function showReplyModal(username, message) {
@@ -180,6 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
     replyMessageInput.value = '';
     replyModal.style.display = 'flex';
     replyMessageInput.focus();
+    
+    // Close modal when clicking outside
+    document.addEventListener('click', function closeModal(e) {
+      if (e.target === replyModal) {
+        replyModal.style.display = 'none';
+        document.removeEventListener('click', closeModal);
+      }
+    });
   }
   
   function formatTime(date) {

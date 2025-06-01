@@ -49,7 +49,6 @@ io.on('connection', (socket) => {
   console.log('New user connected');
 
   socket.on('join', async (username) => {
-    // Get last 50 messages from database
     try {
       const result = await pool.query(`
         SELECT m.id, m.username, m.message, m.timestamp, 
@@ -66,13 +65,11 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', async (data) => {
     try {
-      // Save to database
       await pool.query(
         'INSERT INTO messages (username, message, reply_to) VALUES ($1, $2, $3)',
         [data.username, data.message, data.replyTo || null]
       );
       
-      // Get the last inserted message with reply info
       const result = await pool.query(`
         SELECT m.id, m.username, m.message, m.timestamp, 
                r.username as reply_username, r.message as reply_message
@@ -83,7 +80,6 @@ io.on('connection', (socket) => {
       
       const newMessage = result.rows[0];
       
-      // Broadcast to all clients
       io.emit('newMessage', {
         id: newMessage.id,
         username: newMessage.username,
