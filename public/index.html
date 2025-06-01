@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Node Group Chat</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="/socket.io/socket.io.js"></script>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Group Chat</title>
+    <link rel="stylesheet" href="/css/style.css">
+    </head>
 <body>
-  <div class="chat-container">
-    <header class="chat-header">
-      <img src="https://i.imgur.com/1Xkzj9A.png" alt="Group Profile" class="group-img" />
-      <div>
-        <h2 class="group-name">🔥 AnomGroub</h2>
-        <p class="group-desc">Anonymous • Realtime</p>
-      </div>
-    </header>
+    <div class="chat-container">
+        <header class="chat-header">
+            <img src="/img/group-avatar.png" alt="Group Profile" id="groupProfilePic" class="group-avatar">
+            <div class="group-info">
+                <h2 id="groupName">Loading Group...</h2>
+                </div>
+        </header>
 
-    <main class="chat-messages" id="chatBox"></main>
+        <div class="chat-messages" id="chatMessages">
+            </div>
 
-    <form id="messageForm" class="chat-form">
-      <input type="text" id="messageInput" placeholder="Ketik pesan..." autocomplete="off" required />
-      <button type="submit">Kirim</button>
-    </form>
-  </div>
+        <div class="reply-preview" id="replyPreview" style="display: none;">
+            <div class="reply-preview-content">
+                <strong id="replyPreviewSender"></strong>
+                <p id="replyPreviewText"></p>
+            </div>
+            <button id="cancelReplyBtn">&times;</button>
+        </div>
 
-  <script src="script.js"></script>
+        <footer class="chat-input-area">
+            <button id="emojiBtn">😀</button>
+            <button id="attachFileBtn">📎</button>
+            <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*,audio/*,.gif">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button id="sendBtn">➡️</button>
+            <button id="voiceNoteBtn">🎤</button>
+        </footer>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script> <script src="/js/main.js"></script>
 </body>
 </html>
