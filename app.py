@@ -7,7 +7,6 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Railway PostgreSQL or fallback to SQLite
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///chat.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -26,16 +25,20 @@ def index():
 
 @app.route('/send', methods=['POST'])
 def send():
-    data = request.json
-    message = data.get('message', '').strip()
-    if not message:
-        return jsonify({'status': 'error', 'message': 'Message is empty'}), 400
-
-    new_msg = Chat(username=data.get('username', 'Anonim'), message=message)
-    db.session.add(new_msg)
-    db.session.commit()
-    return jsonify({'status': 'success'})
-
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data:
+            return jsonify({'status': 'error', 'message': 'Message not provided'}), 400
+        message = data['message'].strip()
+        if not message:
+            return jsonify({'status': 'error', 'message': 'Message is empty'}), 400
+        new_msg = Chat(username='Anonim', message=message)
+        db.session.add(new_msg)
+        db.session.commit()
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        print("SEND ERROR:", e)
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/messages', methods=['GET'])
 def get_messages():

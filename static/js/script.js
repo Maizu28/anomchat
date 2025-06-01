@@ -19,20 +19,6 @@ chatForm.addEventListener('submit', async e => {
     e.preventDefault();
     const message = input.value.trim();
     if (!message) return;
-    await fetch('/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
-    });
-    input.value = '';
-    loadMessages();
-});
-
-
-chatForm.addEventListener('submit', async e => {
-    e.preventDefault();
-    const message = input.value.trim();
-    if (!message) return;
 
     const res = await fetch('/send', {
         method: 'POST',
@@ -41,6 +27,7 @@ chatForm.addEventListener('submit', async e => {
     });
 
     const result = await res.json();
+
     if (result.status === 'success') {
         input.value = '';
         loadMessages();
