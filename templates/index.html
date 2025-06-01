@@ -1,34 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Anonim Chat</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
-</head>
-<body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <img src="/static/img/group-icon.png" alt="Group Icon" />
-            <div class="group-info">
-                <h2>Anonim Chat</h2>
-                <p>Grup obrolan publik</p>
-            </div>
-        </div>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Anonim Chat</title>
+		<link rel="stylesheet" href="/static/css/style.css" />
+	</head>
+	<body>
+		<div class="chat-container">
+			<div class="chat-header">
+				<img src="/static/img/group-icon.png" alt="Group Icon" />
+				<div class="group-info">
+					<h2>Anonim Chat</h2>
+					<p>Grup obrolan publik</p>
+				</div>
+			</div>
 
-        <div class="chat-box" id="chat-box"></div>
+			<div class="chat-box" id="chat-box"></div>
 
-        <form id="chat-form">
-            <input
-                type="text"
-                id="message-input"
-                placeholder="Tulis pesan..."
-                autocomplete="off"
-                required
-            />
-            <button type="submit">Kirim</button>
-        </form>
-    </div>
+			<form id="chat-form">
+				<input
+					type="text"
+					id="message-input"
+					placeholder="Tulis pesan..."
+					autocomplete="off"
+					required
+				/>
+				<button type="submit">Kirim</button>
+			</form>
+		</div>
+		<script>
+			function formatTimestamp(isoTimestamp) {
+				const date = new Date(isoTimestamp);
 
-    <script src="/static/js/script.js"></script>
-</body>
+				// Periksa apakah tanggal valid setelah parsing
+				if (isNaN(date.getTime())) {
+					return "Waktu invalid"; // Atau penanganan error lainnya
+				}
+
+				const options = {
+					timeZone: "Asia/Jakarta", // Ini adalah kunci untuk mendapatkan waktu WIB (UTC+7)
+					hour: "2-digit", // Format jam (misal: 09, 17)
+					minute: "2-digit", // Format menit (misal: 05, 30)
+					// second: '2-digit',     // Aktifkan jika ingin menampilkan detik
+					hourCycle: "h23", // Menggunakan format 24 jam (00-23).
+					// Opsi lain: 'h12' untuk format 12 jam AM/PM (jika 'hour12: true' juga diset)
+					// Jika Anda ingin format 12 jam AM/PM, gunakan:
+					// hour12: true,
+				};
+
+				// Menggunakan 'id-ID' untuk konvensi format Indonesia (misal urutan, pemisah)
+				let formattedTime = date.toLocaleTimeString("id-ID", options);
+
+				// Opsional: Tambahkan teks " WIB" setelah waktu
+				// Jika Anda ingin menambahkan " WIB" secara eksplisit, hilangkan komentar pada baris di bawah:
+				// formattedTime += " WIB";
+				// Contoh hasil jika diaktifkan: "14:35 WIB"
+
+				return formattedTime;
+			}
+		</script>
+
+		<script src="/static/js/script.js"></script>
+	</body>
 </html>

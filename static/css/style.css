@@ -1,21 +1,36 @@
+
+
+body, html {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
 body {
-	background: #e5ddd5;
-	font-family: Arial, sans-serif;
-	display: flex;
-	justify-content: center;
-	padding-top: 40px;
-	margin: 0;
+    background: #e5ddd5;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    padding-top: 0;
+    margin: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
 }
 
 .chat-container {
-	background: #fff;
-	width: 400px;
-	border-radius: 8px;
-	overflow: hidden;
-	box-shadow: 0 0 10px #ccc;
-	display: flex;
-	flex-direction: column;
-	height: 600px;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-header {
@@ -107,3 +122,4 @@ button {
 /* atau biarkan default block behavior yang akan membuat timestamp di bawah. */
 /* Aturan .message.user-local yang ada untuk align-self: flex-end; dan margin-left: auto; */
 /* seharusnya tetap membuat bubble pesan di kanan, dan text-align di atas akan mengatur teks di dalamnya. */
+
