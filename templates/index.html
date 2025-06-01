@@ -1,283 +1,65 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnomChat</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Anonim Chat</title>
+		<link rel="stylesheet" href="/static/css/style.css" />
+	</head>
+	<body>
+		<div class="chat-container">
+			<div class="chat-header">
+				<img src="/static/img/group-icon.png" alt="Group Icon" />
+				<div class="group-info">
+					<h2>Anonim Chat</h2>
+					<p>Grup obrolan publik</p>
+				</div>
+			</div>
 
-        #chat-container {
-            display: flex;
-            flex-direction: column;
-            width: 90%;
-            max-width: 450px; /* Sedikit lebih lebar untuk kenyamanan */
-            height: 95vh;
-            max-height: 700px; /* Batas tinggi maksimum */
-            background: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.15);
-            border-radius: 8px;
-            overflow: hidden;
-        }
+			<div class="chat-box" id="chat-box"></div>
 
-        #header {
-            background-color: #007bff;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
+			<form id="chat-form">
+				<input
+					type="text"
+					id="message-input"
+					placeholder="Tulis pesan..."
+					autocomplete="off"
+					required
+				/>
+				<button type="submit">Kirim</button>
+			</form>
+		</div>
+		<script>
+			function formatTimestamp(isoTimestamp) {
+				const date = new Date(isoTimestamp);
 
-        #chat-box {
-            flex-grow: 1;
-            padding: 15px; /* Padding seragam */
-            overflow-y: auto;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-            gap: 10px; /* Jarak antar bubble pesan */
-        }
+				// Periksa apakah tanggal valid setelah parsing
+				if (isNaN(date.getTime())) {
+					return "Waktu invalid"; // Atau penanganan error lainnya
+				}
 
-        .message {
-            padding: 10px 14px; /* Padding lebih nyaman */
-            margin-bottom: 0; /* Dihapus karena gap pada chat-box */
-            border-radius: 18px; /* Lebih bulat */
-            line-height: 1.4;
-            max-width: 78%; /* Sedikit lebih lebar untuk pesan */
-            word-wrap: break-word;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Bayangan halus */
-        }
+				const options = {
+					timeZone: "Asia/Jakarta", // Ini adalah kunci untuk mendapatkan waktu WIB (UTC+7)
+					hour: "2-digit", // Format jam (misal: 09, 17)
+					minute: "2-digit", // Format menit (misal: 05, 30)
+					// second: '2-digit',     // Aktifkan jika ingin menampilkan detik
+					hourCycle: "h23", // Menggunakan format 24 jam (00-23).
+					// Opsi lain: 'h12' untuk format 12 jam AM/PM (jika 'hour12: true' juga diset)
+					// Jika Anda ingin format 12 jam AM/PM, gunakan:
+					// hour12: true,
+				};
 
-        .message.user-local {
-            background-color: #dcf8c6; /* Hijau ala WhatsApp untuk pesan pengguna lokal */
-            align-self: flex-end; /* Rata kanan */
-            color: #303030; /* Warna teks agar kontras di hijau muda */
-        }
+				// Menggunakan 'id-ID' untuk konvensi format Indonesia (misal urutan, pemisah)
+				let formattedTime = date.toLocaleTimeString("id-ID", options);
 
-        .message:not(.user-local) {
-            background-color: #f0f0f0; /* Abu-abu muda untuk pesan lain */
-            align-self: flex-start; /* Rata kiri */
-            color: #303030;
-        }
+				// Opsional: Tambahkan teks " WIB" setelah waktu
+				// Jika Anda ingin menambahkan " WIB" secara eksplisit, hilangkan komentar pada baris di bawah:
+				// formattedTime += " WIB";
+				// Contoh hasil jika diaktifkan: "14:35 WIB"
 
-        .message p.message-text-content {
-            margin: 0; /* Tidak ada margin untuk paragraf isi pesan */
-        }
-        .message p.message-text-content strong {
-            /* Bisa ditambahkan style khusus untuk username jika perlu */
-        }
+				return formattedTime;
+			}
+		</script>
 
-        .timestamp {
-            display: block; /* Agar timestamp ada di baris baru */
-            font-size: 0.75em; /* Font kecil untuk timestamp */
-            color: #777;    /* Warna default timestamp */
-            margin-top: 4px; /* Jarak dari teks pesan di atasnya */
-        }
-
-        .message.user-local .timestamp {
-            color: #589442; /* Warna timestamp lebih gelap agar kontras di bubble hijau */
-            text-align: right; /* Timestamp rata kanan untuk pesan pengguna lokal */
-        }
-
-        .message:not(.user-local) .timestamp {
-            text-align: left; /* Timestamp rata kiri untuk pesan lain */
-        }
-        
-        #chat-form {
-            display: flex;
-            padding: 12px; /* Padding lebih */
-            border-top: 1px solid #eee;
-            background-color: #f9f9f9; /* Sedikit beda warna dari chatbox */
-        }
-
-        #message-input {
-            flex-grow: 1;
-            padding: 12px 15px; /* Padding lebih nyaman */
-            border: 1px solid #ddd;
-            border-radius: 20px; /* Input lebih bulat */
-            margin-right: 10px;
-            outline: none;
-            font-size: 0.95em;
-        }
-
-        #message-input:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,.25); /* Efek focus */
-        }
-
-        button[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 18px; /* Padding lebih pada tombol */
-            border-radius: 20px; /* Tombol lebih bulat */
-            cursor: pointer;
-            font-size: 0.95em;
-            transition: background-color 0.2s ease;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message { /* Kelas untuk menampilkan pesan error di chatbox */
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            margin: 10px 0;
-            align-self: center; /* Agar di tengah jika chatbox adalah flex container */
-            width: calc(100% - 20px); /* Ambil lebar penuh dikurangi padding */
-        }
-
-    </style>
-</head>
-<body>
-    <div id="chat-container">
-        <div id="header">AnomChat</div>
-        <div id="chat-box">
-            </div>
-        <form id="chat-form">
-            <input type="text" id="message-input" placeholder="Ketik pesan anonim..." autocomplete="off">
-            <button type="submit">Kirim</button>
-        </form>
-    </div>
-
-    <script>
-        // === Variabel Global ===
-        const chatBox = document.getElementById("chat-box");
-        const chatForm = document.getElementById("chat-form");
-        const input = document.getElementById("message-input");
-
-        // === Fungsi untuk Memformat Timestamp ke WIB ===
-        function formatTimestamp(isoTimestamp) {
-            const date = new Date(isoTimestamp);
-            if (isNaN(date.getTime())) {
-                return "Waktu invalid";
-            }
-            const options = {
-                timeZone: "Asia/Jakarta", // WIB (UTC+7)
-                hour: "2-digit",
-                minute: "2-digit",
-                hourCycle: "h23", // Format 24 jam (00-23)
-            };
-            let formattedTime = date.toLocaleTimeString("id-ID", options);
-            
-            // Opsional: Tambahkan " WIB" jika diinginkan
-            // formattedTime += " WIB"; 
-            
-            return formattedTime;
-        }
-
-        // === Fungsi untuk Menampilkan Pesan ===
-        function displayMessages(messages) {
-            chatBox.innerHTML = ""; 
-            messages.forEach((message) => {
-                const messageDiv = document.createElement("div");
-                messageDiv.classList.add("message");
-
-                // Identifikasi pesan dari pengguna lokal.
-                // "UserLocalAnomChat" adalah placeholder. Pengembang perlu memastikan ini sesuai
-                // dengan cara username pengguna saat ini diidentifikasi di sisi klien.
-                // Misalnya, jika username disimpan dalam session dan dikirim ke klien saat login:
-                // const currentUsername = sessionStorage.getItem('anomchat_username');
-                // if (message.username === currentUsername) { ... }
-                // Untuk AnomChat, username dari server adalah session.get('username', 'Anonim')
-                // Jika ingin styling khusus untuk "Anonim" yang dikirim oleh user saat ini,
-                // perlu cara untuk membedakannya.
-                // Untuk sementara, kita gunakan placeholder "UserLocalAnomChat"
-                // atau mungkin lebih baik jika server menambahkan flag seperti `is_own_message: true`
-                if (message.username === "UserLocalAnomChat") { 
-                    messageDiv.classList.add("user-local");
-                }
-
-                const messageTextElement = document.createElement("p");
-                messageTextElement.classList.add("message-text-content");
-                // Pastikan field 'message.message' sesuai dengan data dari server
-                messageTextElement.innerHTML = `<strong>${message.username}:</strong> ${message.message}`;
-
-                const timestampElement = document.createElement("div");
-                timestampElement.classList.add("timestamp");
-                timestampElement.textContent = formatTimestamp(message.timestamp);
-
-                messageDiv.appendChild(messageTextElement);
-                messageDiv.appendChild(timestampElement);
-                
-                chatBox.appendChild(messageDiv);
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        // === Fungsi untuk Memuat Pesan dari Server ===
-        async function loadMessages() {
-            try {
-                const res = await fetch("/get_messages"); // Sesuai dengan route di app.py
-                if (!res.ok) {
-                    console.error("Gagal memuat pesan, status:", res.status, await res.text());
-                    // Anda bisa menampilkan pesan error di UI di sini jika diinginkan
-                    // chatBox.innerHTML = "<div class='message error-message'>Gagal memuat pesan. Coba lagi nanti.</div>";
-                    return;
-                }
-                const data = await res.json();
-                displayMessages(data);
-            } catch (error) {
-                console.error("Error saat memuat pesan:", error);
-                // chatBox.innerHTML = "<div class='message error-message'>Terjadi kesalahan saat memuat pesan.</div>";
-            }
-        }
-
-        // === Event Listener untuk Form Pengiriman Pesan ===
-        chatForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const messageText = input.value.trim();
-            if (!messageText) return;
-
-            try {
-                const res = await fetch("/send_message", { // Sesuai dengan route di app.py
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: messageText }), // Server AnomChat mengharapkan { "message": "..." }
-                });
-
-                if (!res.ok) {
-                    let errorMessage = "Gagal mengirim pesan.";
-                    try {
-                        const errorResult = await res.json();
-                        errorMessage = errorResult.message || errorMessage;
-                    } catch (jsonError) { /* Biarkan error default jika parsing JSON gagal */ }
-                    alert(errorMessage + ` (Status: ${res.status})`);
-                    return;
-                }
-                
-                const result = await res.json();
-                if (result.status === "success") {
-                    input.value = "";
-                    loadMessages(); 
-                } else {
-                    alert(result.message || "Gagal mengirim pesan dari server.");
-                }
-            } catch (error) {
-                console.error("Error saat mengirim pesan:", error);
-                alert("Terjadi kesalahan jaringan saat mengirim pesan.");
-            }
-        });
-
-        // === Memuat Pesan Saat Halaman Dibuka dan Secara Berkala ===
-        window.onload = loadMessages;
-        setInterval(loadMessages, 3000); // Polling setiap 3 detik
-    </script>
-</body>
+		<script src="/static/js/script.js"></script>
+	</body>
 </html>
