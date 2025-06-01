@@ -1,40 +1,52 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grup Chat Anonim</title>
-    <link rel="stylesheet" href="/css/style.css">
-    </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anonymous WhatsApp Chat</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 <body>
+  <div class="app">
     <div class="chat-container">
-        <header class="chat-header">
-            <img src="/img/default-group-avatar.png" alt="Profil Grup" id="groupProfilePic" class="group-avatar">
-            <div class="group-info">
-                <h2 id="groupName">Memuat Grup...</h2>
-                </div>
-        </header>
-
-        <div class="chat-messages" id="chatMessages">
-            </div>
-
-        <div class="reply-preview" id="replyPreview" style="display: none;">
-            <div class="reply-preview-content">
-                Replying to: <strong id="replyPreviewSender"></strong>
-                <p id="replyPreviewText"></p>
-            </div>
-            <button id="cancelReplyBtn" title="Batalkan Balasan">&times;</button>
-        </div>
-
-        <footer class="chat-input-area">
-            <button id="emojiBtn" title="Emoji">😀</button>
-            <button id="attachFileBtn" title="Lampirkan File">📎</button>
-            <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*,audio/*,.gif"> <input type="text" id="messageInput" placeholder="Ketik pesan...">
-            <button id="sendBtn" title="Kirim">➡️</button>
-            <button id="voiceNoteBtn" title="Rekam Pesan Suara">🎤</button>
-        </footer>
+      <div class="chat-header">
+        <div class="chat-title">Anonymous Group</div>
+        <div class="chat-subtitle">Everyone is anonymous here</div>
+      </div>
+      
+      <div class="chat-messages" id="chat-messages"></div>
+      
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+      </div>
     </div>
+  </div>
 
-    <script src="/socket.io/socket.io.js"></script> <script src="/js/main.js"></script>
+  <div class="modal" id="username-modal">
+    <div class="modal-content">
+      <h2>Enter a Temporary Name</h2>
+      <p>This name will be used for this session only.</p>
+      <input type="text" id="username-input" placeholder="Anonymous User">
+      <button id="start-chat">Start Chatting</button>
+    </div>
+  </div>
+
+  <!-- Tambahkan sebelum </body> -->
+<div class="modal" id="reply-modal">
+  <div class="modal-content">
+    <h2>Reply to Message</h2>
+    <div id="reply-preview"></div>
+    <input type="text" id="reply-message-input" placeholder="Type your reply...">
+    <div class="modal-buttons">
+      <button id="cancel-reply">Cancel</button>
+      <button id="send-reply">Send Reply</button>
+    </div>
+  </div>
+</div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
