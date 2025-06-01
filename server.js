@@ -1,28 +1,24 @@
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 
-const bannedWords = ['anjing', 'goblok', 'tolol']; // tambah sesuai kebutuhan
-let userCount = 1;
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
-wss.on('connection', (ws) => {
-  ws.username = `User-${userCount++}`;
+app.use(express.static('public'));
 
-  ws.on('message', (message) => {
-    const msg = message.toString().trim();
+io.on('connection', (socket) => {
+  console.log('A user connected');
 
-    for (const word of bannedWords) {
-      if (msg.toLowerCase().includes(word)) {
-        ws.send('[SYSTEM] Pesan kamu mengandung kata yang tidak diperbolehkan.');
-        return;
-      }
-    }
-
-    wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(`${ws.username}: ${msg}`);
-      }
-    });
+  socket.on('send_message', (data) => {
+    io.emit('receive_message', data); // broadcast ke semua klien
   });
 
-  ws.send(`[SYSTEM] Selamat datang ${ws.username}!`);
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
 });
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
