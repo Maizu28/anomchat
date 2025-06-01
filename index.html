@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Grup Chat - Nongkrong Online</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header" onclick="toggleGroupDescription()">
+      <h2>Nongkrong Online</h2>
+      <p id="group-desc" style="display: none;">Tempat ngobrol santai tanpa identitas. Dilarang toxic ya!</p>
+    </div>
+
+    <div id="chat-box" class="chat-box"></div>
+
+    <div class="chat-input">
+      <input type="text" id="msgInput" placeholder="Ketik pesan..." />
+      <button onclick="sendMessage()">Kirim</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chat-box');
+    const input = document.getElementById('msgInput');
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onmessage = (event) => {
+      const message = document.createElement('div');
+      message.classList.add('message');
+      if (event.data.startsWith('[SYSTEM]')) {
+        message.classList.add('system');
+      }
+      message.textContent = event.data;
+      chatBox.appendChild(message);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    function sendMessage() {
+      if (input.value.trim() !== '') {
+        ws.send(input.value);
+        input.value = '';
+      }
+    }
+
+    input.addEventListener('keypress', e => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function toggleGroupDescription() {
+      const desc = document.getElementById('group-desc');
+      desc.style.display = (desc.style.display === 'none') ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>
