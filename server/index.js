@@ -32,6 +32,7 @@ async function initializeDb() {
         id SERIAL PRIMARY KEY,
         username VARCHAR(255),
         message TEXT,
+        reply_to INTEGER REFERENCES messages(id),
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -50,9 +51,13 @@ io.on('connection', (socket) => {
   socket.on('join', async (username) => {
     // Get last 50 messages from database
     try {
-      const result = await pool.query(
-        'SELECT username, message, timestamp FROM messages ORDER BY timestamp DESC LIMIT 50'
-      );
+      const result = await pool.query(`
+        SELECT m.id, m.username, m.message, m.timestamp, 
+               r.username as reply_username, r.message as reply_message
+        FROM messages m
+        LEFT JOIN messages r ON m.reply_to = r.id
+        ORDER BY m.timestamp DESC LIMIT 50
+      `);
       socket.emit('previousMessages', result.rows.reverse());
     } catch (err) {
       console.error('Error fetching messages:', err);
@@ -63,15 +68,29 @@ io.on('connection', (socket) => {
     try {
       // Save to database
       await pool.query(
-        'INSERT INTO messages (username, message) VALUES ($1, $2)',
-        [data.username, data.message]
+        'INSERT INTO messages (username, message, reply_to) VALUES ($1, $2, $3)',
+        [data.username, data.message, data.replyTo || null]
       );
+      
+      // Get the last inserted message with reply info
+      const result = await pool.query(`
+        SELECT m.id, m.username, m.message, m.timestamp, 
+               r.username as reply_username, r.message as reply_message
+        FROM messages m
+        LEFT JOIN messages r ON m.reply_to = r.id
+        ORDER BY m.id DESC LIMIT 1
+      `);
+      
+      const newMessage = result.rows[0];
       
       // Broadcast to all clients
       io.emit('newMessage', {
-        username: data.username,
-        message: data.message,
-        timestamp: new Date()
+        id: newMessage.id,
+        username: newMessage.username,
+        message: newMessage.message,
+        timestamp: newMessage.timestamp,
+        reply_username: newMessage.reply_username,
+        reply_message: newMessage.reply_message
       });
     } catch (err) {
       console.error('Error saving message:', err);
@@ -81,57 +100,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
-});
-
-// Dalam socket.io connection
-socket.on('sendMessage', async (data) => {
-  try {
-    // Save to database
-    await pool.query(
-      'INSERT INTO messages (username, message, reply_to) VALUES ($1, $2, $3)',
-      [data.username, data.message, data.replyTo || null]
-    );
-    
-    // Get the last inserted message with reply info
-    const result = await pool.query(`
-      SELECT m.id, m.username, m.message, m.timestamp, 
-             r.username as reply_username, r.message as reply_message
-      FROM messages m
-      LEFT JOIN messages r ON m.reply_to = r.id
-      ORDER BY m.id DESC LIMIT 1
-    `);
-    
-    const newMessage = result.rows[0];
-    
-    // Broadcast to all clients
-    io.emit('newMessage', {
-      id: newMessage.id,
-      username: newMessage.username,
-      message: newMessage.message,
-      timestamp: newMessage.timestamp,
-      replyTo: newMessage.reply_to,
-      replyUsername: newMessage.reply_username,
-      replyMessage: newMessage.reply_message
-    });
-  } catch (err) {
-    console.error('Error saving message:', err);
-  }
-});
-
-// Modifikasi query untuk mendapatkan pesan sebelumnya
-socket.on('join', async (username) => {
-  try {
-    const result = await pool.query(`
-      SELECT m.id, m.username, m.message, m.timestamp, 
-             r.username as reply_username, r.message as reply_message
-      FROM messages m
-      LEFT JOIN messages r ON m.reply_to = r.id
-      ORDER BY m.timestamp DESC LIMIT 50
-    `);
-    socket.emit('previousMessages', result.rows.reverse());
-  } catch (err) {
-    console.error('Error fetching messages:', err);
-  }
 });
 
 const PORT = process.env.PORT || 3000;
