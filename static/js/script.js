@@ -36,5 +36,33 @@ chatForm.addEventListener('submit', async e => {
     }
 });
 
+function displayMessages(messages) {
+    // ... (kode lain)
+    messages.forEach(message => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        if (message.username === 'UserLocalAnomChat') { // Sesuaikan dengan cara identifikasi pengguna lokal Anda
+            messageDiv.classList.add('user-local');
+        }
+        
+        // 1. Buat elemen untuk teks pesan (username + isi pesan)
+        const messageTextElement = document.createElement('p');
+        messageTextElement.classList.add('message-text-content'); // Tambahkan kelas jika perlu styling khusus
+        messageTextElement.innerHTML = `<strong>${message.username}:</strong> ${message.message_text}`;
+        
+        // 2. Buat elemen terpisah untuk waktu pengiriman
+        const timestampElement = document.createElement('div'); // Gunakan <div> agar defaultnya block
+        timestampElement.classList.add('timestamp');
+        timestampElement.textContent = formatTimestamp(message.timestamp); // formatTimestamp adalah fungsi Anda
+
+        // 3. Masukkan kedua elemen ke dalam messageDiv
+        messageDiv.appendChild(messageTextElement);
+        messageDiv.appendChild(timestampElement); // Timestamp akan berada di bawah messageTextElement
+        
+        chatBox.appendChild(messageDiv);
+    });
+    // ... (kode lain)
+}
+
 setInterval(loadMessages, 3000);
 window.onload = loadMessages;
