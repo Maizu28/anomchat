@@ -123,3 +123,55 @@ button {
 /* Aturan .message.user-local yang ada untuk align-self: flex-end; dan margin-left: auto; */
 /* seharusnya tetap membuat bubble pesan di kanan, dan text-align di atas akan mengatur teks di dalamnya. */
 
+/* Responsive styles for mobile devices */
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .chat-header {
+        padding: 14px 8px;
+    }
+
+    .chat-header img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .group-info h2 {
+        font-size: 22px;
+    }
+
+    .group-info p {
+        font-size: 14px;
+    }
+
+    .chat-box {
+        padding: 16px 6px;
+        font-size: 18px;
+    }
+
+    .message {
+        font-size: 18px;
+        padding: 12px 16px;
+        max-width: 90%;
+    }
+
+    #message-input {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    button {
+        font-size: 18px;
+        padding: 14px 18px;
+    }
+
+    .timestamp {
+        font-size: 0.85em;
+    }
+}
