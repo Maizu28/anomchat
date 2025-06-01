@@ -27,3 +27,7 @@ messageForm.addEventListener('submit', (e) => {
 socket.on('receive_message', (data) => {
   addMessage(data);
 });
+
+socket.on('chat_history', (messages) => {
+  messages.forEach(addMessage);
+});
