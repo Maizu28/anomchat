@@ -1,8 +1,0 @@
-[build]
-  publish = "." # Direktori root proyek Anda (karena index.html ada di sana)
-  functions = "netlify/functions" # Direktori tempat Netlify Functions Anda berada
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
