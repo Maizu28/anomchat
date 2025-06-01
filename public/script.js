@@ -14,6 +14,7 @@ function addMessage({ user: sender, text }) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+
 messageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const text = messageInput.value.trim();

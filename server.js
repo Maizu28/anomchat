@@ -11,17 +11,17 @@ const io = new Server(server);
 app.use(express.static('public'));
 
 // 💾 Connect ke MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/groupchat', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('MongoDB error:', err));
+}).then(() => console.log('✅ MongoDB Connected'))
+  .catch(err => console.error('MongoDB Error:', err));
 
 // Kirim riwayat pesan saat user baru terhubung
 io.on('connection', async (socket) => {
-  console.log('User connected');
+  console.log('A user connected');
 
-  // Kirim 50 pesan terbaru ke user baru
+  // ⬅️ Kirim 50 pesan terakhir ke user baru
   const messages = await Message.find().sort({ timestamp: 1 }).limit(50);
   socket.emit('chat_history', messages);
 
@@ -32,12 +32,10 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    console.log('A user disconnected');
   });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-require('dotenv').config();
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+require('dotenv').config(); // load MONGO_URI
+const mongoose = require('mongoose');
+const Message = require('./models/Message');
