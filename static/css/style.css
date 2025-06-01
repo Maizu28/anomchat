@@ -104,7 +104,7 @@ button {
 
 .timestamp {
 	display: block; /* Membuat timestamp mengambil barisnya sendiri (di bawah) */
-	font-size: 0.7em; /* Ukuran font lebih kecil. Sesuaikan nilainya (misal: 0.65em, 10px, x-small) */
+	font-size: 0.3em; /* Ukuran font lebih kecil. Sesuaikan nilainya (misal: 0.65em, 10px, x-small) */
 	color: #999; /* Warna sedikit lebih pudar agar tidak terlalu dominan */
 	margin-top: 3px; /* Jarak kecil antara teks pesan dan timestamp */
 	/* text-align: left; default untuk pesan biasa */

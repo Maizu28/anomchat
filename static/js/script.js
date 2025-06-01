@@ -9,7 +9,7 @@ async function loadMessages() {
 	data.forEach((msg) => {
 		const div = document.createElement("div");
 		div.classList.add("message");
-		div.innerText = `${msg.username}: ${msg.message} (${msg.timestamp})`;
+		div.innerText = `${msg.username}:\n${msg.message}\n(${msg.timestamp})`;
 		chatBox.appendChild(div);
 	});
 	chatBox.scrollTop = chatBox.scrollHeight;
