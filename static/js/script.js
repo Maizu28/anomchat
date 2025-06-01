@@ -37,7 +37,6 @@ chatForm.addEventListener("submit", async (e) => {
 });
 
 function displayMessages(messages) {
-	// ... (kode lain)
 	messages.forEach((message) => {
 		const messageDiv = document.createElement("div");
 		messageDiv.classList.add("message");
@@ -91,7 +90,7 @@ function displayMessages(messages) {
 
 		return formattedTime;
 	}
-} // <-- Tambahkan penutup fungsi displayMessages di sini
+}
 
 setInterval(loadMessages, 3000);
 window.onload = loadMessages;
