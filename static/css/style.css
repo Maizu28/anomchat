@@ -13,6 +13,31 @@ body {
     overflow: hidden;
     box-shadow: 0 0 10px #ccc;
 }
+.chat-header {
+    display: flex;
+    align-items: center;
+    background-color: #075e54;
+    color: white;
+    padding: 10px;
+}
+
+.chat-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.group-info h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.group-info p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
 
 .chat-box {
     height: 500px;
@@ -47,3 +72,4 @@ button {
     padding: 10px 15px;
     cursor: pointer;
 }
+

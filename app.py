@@ -27,10 +27,15 @@ def index():
 @app.route('/send', methods=['POST'])
 def send():
     data = request.json
-    new_msg = Chat(username=data.get('username', 'Anonim'), message=data['message'])
+    message = data.get('message', '').strip()
+    if not message:
+        return jsonify({'status': 'error', 'message': 'Message is empty'}), 400
+
+    new_msg = Chat(username=data.get('username', 'Anonim'), message=message)
     db.session.add(new_msg)
     db.session.commit()
     return jsonify({'status': 'success'})
+
 
 @app.route('/messages', methods=['GET'])
 def get_messages():

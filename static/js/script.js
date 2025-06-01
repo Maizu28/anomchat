@@ -28,5 +28,26 @@ chatForm.addEventListener('submit', async e => {
     loadMessages();
 });
 
+
+chatForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+
+    const res = await fetch('/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+    });
+
+    const result = await res.json();
+    if (result.status === 'success') {
+        input.value = '';
+        loadMessages();
+    } else {
+        alert(result.message || 'Gagal mengirim pesan');
+    }
+});
+
 setInterval(loadMessages, 3000);
 window.onload = loadMessages;
