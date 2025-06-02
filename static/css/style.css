@@ -28,6 +28,9 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden; /* Mencegah scroll pada level ini */
+}
+
+html {
     font-size: 16px; /* Default desktop base font size */
 }
 
@@ -123,14 +126,13 @@ body {
 .chat-box {
     flex-grow: 1;
     padding: 0.625rem 0.9375rem; /* 10px 15px */
-    overflow-y: auto;
+    overflow-y: auto; /* Bisa di-scroll */
     background-color: var(--dark-bg-secondary); /* Dark mode chat background */
     display: flex;
     flex-direction: column;
     gap: 0.5rem; /* 8px */
     scroll-behavior: smooth;
-    /* Latar belakang pattern dark mode, ganti dengan URL Anda */
-    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-8ff00730-746a-11e7-9192-3e215d263901.png'); /* Contoh dark pattern */
+    background-image: url('https://user-images.githubusercontent.com/15075759/28719144-8ff00730-746a-11e7-9192-3e215d263901.png'); /* Contoh dark pattern, ganti dengan URL Anda */
     background-repeat: repeat;
     background-size: 10rem; /* Sesuaikan ukuran pattern jika perlu */
 }
@@ -241,46 +243,25 @@ body {
     display: block;
 }
 
-/* === Form Input Chat (Dark Mode dengan Penyesuaian) === */
+/* === Form Input Chat (Disederhanakan & Dark Mode) === */
 .chat-form {
     display: flex;
-    align-items: flex-end;
-    padding: 0.5rem 0.5rem; /* Padding lebih kecil, lebih padat */
+    align-items: flex-end; /* Align item ke bawah untuk input dan button */
+    padding: 0.5rem 0.75rem; /* 8px 12px padding kiri-kanan */
     background-color: var(--dark-header-bg); /* Background dark mode untuk form */
     border-top: 0.0625rem solid var(--dark-input-bg);
-    padding-bottom: calc(env(safe-area-inset-bottom, 0.5rem) + 0.5rem); /* Default 8px + 8px */
+    /* Padding untuk menghindari navigasi mobile dan memberi ruang ekstra */
+    padding-bottom: calc(env(safe-area-inset-bottom, 0.5rem) + 0.5rem); /* default 8px + 8px */
     flex-shrink: 0;
     gap: 0.5rem; /* Jarak antar elemen di form */
 }
 
-.icon-button {
-    background: none;
-    border: none;
-    color: var(--dark-icon-color); /* Warna ikon di input */
-    font-size: 1.5rem; /* Ukuran ikon */
-    cursor: pointer;
-    padding: 0.5rem; /* Padding area klik */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    border-radius: 50%; /* Bulatkan icon button */
-    transition: background-color 0.2s ease;
-}
-
-.icon-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.emoji-button {
-    /* Gaya spesifik untuk tombol emoji */
-    margin-left: 0.25rem; /* Sedikit margin dari kiri */
-}
-
-.attachment-button {
-    /* Gaya spesifik untuk tombol attachment */
-    margin-right: 0.25rem; /* Sedikit margin dari kanan */
-}
+/* Menghapus gaya untuk icon-button karena sudah dihapus dari HTML */
+/*
+.icon-button { ... }
+.emoji-button { ... }
+.attachment-button { ... }
+*/
 
 /* Textarea (Input Pesan) */
 textarea#message-input {
@@ -291,7 +272,7 @@ textarea#message-input {
     background-color: var(--dark-input-bg); /* Background input dark mode */
     color: var(--dark-text-primary); /* Warna teks input */
     font-size: 1rem; /* 16px */
-    margin: 0; /* Hapus margin yang mungkin ada dari elemen sebelumnya */
+    margin: 0; /* Pastikan tidak ada margin yang mengganggu */
     outline: none;
     box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
     resize: none; /* Cegah resize manual */
@@ -312,7 +293,7 @@ textarea#message-input:focus {
     box-shadow: 0 0 0 0.125rem rgba(0, 150, 136, 0.5); /* Hijau WhatsApp saat fokus */
 }
 
-/* Tombol Kirim (Send/Voice Note) */
+/* Tombol Kirim (Send Only) */
 .send-button {
     background-color: var(--whatsapp-light-green); /* Warna hijau WhatsApp */
     color: white;
@@ -381,7 +362,7 @@ textarea#message-input:focus {
     .chat-box { padding: 0.5rem 0.75rem; }
     .message { font-size: 0.85rem; }
     .chat-form { padding: 0.4rem 0.4rem; gap: 0.4rem; }
-    .icon-button { font-size: 1.3rem; padding: 0.4rem; }
+    /* Menghapus style untuk icon-button di media query juga */
     textarea#message-input {
         padding: 0.6rem 0.8rem;
         font-size: 0.9rem;
@@ -403,7 +384,7 @@ textarea#message-input:focus {
     .chat-box { padding: 0.4rem 0.6rem; }
     .message { font-size: 0.8rem; }
     .chat-form { padding: 0.3rem 0.3rem; gap: 0.3rem; }
-    .icon-button { font-size: 1.2rem; padding: 0.3rem; }
+    /* Menghapus style untuk icon-button di media query juga */
     textarea#message-input {
         padding: 0.5rem 0.7rem;
         font-size: 0.85rem;
@@ -415,7 +396,7 @@ textarea#message-input:focus {
 
 /* Gaya tambahan untuk mode landscape pada mobile jika diperlukan */
 @media screen and (orientation: landscape) and (max-height: 600px) {
-    html { font-size: 13px; } /* Menyesuaikan agar tidak terlalu besar di landscape */
+    html { font-size: 13px; }
     .chat-header { padding: 0.5rem 0.5rem; }
     .chat-form {
         padding-top: 0.4rem;
@@ -423,5 +404,6 @@ textarea#message-input:focus {
     }
     textarea#message-input { min-height: 2rem; max-height: 5rem; }
     .send-button { width: 2.2rem; height: 2.2rem; font-size: 1rem; }
-    .back-button, .header-icons .icon, .icon-button { font-size: 1.1rem; }
-                  }
+    /* Menghapus style untuk icon-button di media query juga */
+    }
+                                           
