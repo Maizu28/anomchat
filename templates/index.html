@@ -5,11 +5,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Anonim Chat</title>
 		<link rel="stylesheet" href="/static/css/style.css" />
-	</head>
+		</head>
 	<body>
 		<div class="chat-container">
 			<div class="chat-header">
-				<img src="/static/img/group-icon.png" alt="Group Icon" />
+				<a href="#" class="back-button">←</a> <img src="/static/img/group-icon.png" alt="Group Icon" />
 				<div class="group-info">
 					<h2>Anonim Chat</h2>
 					<p>Grup obrolan publik</p>
@@ -20,12 +20,14 @@
 			<div class="chat-box" id="chat-box"></div>
 
 			<form id="chat-form">
-				<textarea
-					id="message-input"
-					placeholder="Tulis pesan..."
-					autocomplete="off"
-					rows="1"
-				></textarea>
+				<div class="input-wrapper">
+                     <textarea
+						id="message-input"
+						placeholder="Tulis pesan..."
+						autocomplete="off"
+						rows="1"
+					></textarea>
+                     </div>
 				<button type="submit" class="send-button">
                     ▶
                 </button>
