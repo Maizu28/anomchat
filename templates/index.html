@@ -1,37 +1,36 @@
 <!DOCTYPE html>
 <html lang="id">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Anonim Chat</title>
-		<link rel="stylesheet" href="/static/css/style.css" />
-		</head>
-	<body>
-		<div class="chat-container">
-			<div class="chat-header">
-				<img src="/static/img/group-icon.png" alt="Group Icon" />
-				<div class="group-info">
-					<h2>Anonim Chat</h2>
-					<p>Grup obrolan publik</p>
-				</div>
-				
-			</div>
-
-			<div class="chat-box" id="chat-box"></div>
-
-			<form id="chat-form"> 
-				<div class="input-wrapper">
-                     <textarea
-						id="message-input"
-						placeholder="Tulis pesan..."
-						autocomplete="off"
-						rows="1"
-					></textarea>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Anonim Chat</title>
+        <link rel="stylesheet" href="/static/css/style.css" />
+    </head>
+    <body>
+        <div class="chat-container">
+            <div class="chat-header">
+                <img src="/static/img/group-icon.png" alt="Group Icon" />
+                <div class="group-info">
+                    <h2>Anonim Chat</h2>
+                    <p>Grup obrolan publik</p>
                 </div>
-				<button type="submit" class="send-button">▶</button>
-			</form>
-		</div>
-		
-		<script src="/static/js/script.js"></script>
-	</body>
+                </div>
+
+            <div class="chat-box" id="chat-box"></div>
+
+            <form id="chat-form"> 
+                <div class="input-wrapper">
+                    <textarea
+                        id="message-input"
+                        placeholder="Tulis pesan..."
+                        autocomplete="off"
+                        rows="1"
+                    ></textarea>
+                </div>
+                <button type="submit" class="send-button">▶</button>
+            </form>
+        </div>
+        
+        <script src="/static/js/script.js"></script>
+    </body>
 </html>

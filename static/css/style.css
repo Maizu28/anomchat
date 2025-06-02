@@ -68,18 +68,20 @@ body {
     flex-shrink: 0;
 }
 
+/* Dihilangkan karena tidak ada di HTML:
 .back-button {
     background: none;
     border: none;
     color: var(--dark-text-primary);
-    font-size: 1.5rem; /* Ukuran panah kembali */
+    font-size: 1.5rem;
     margin-right: 1rem;
     cursor: pointer;
-    text-decoration: none; /* Hilangkan underline jika itu link */
-    line-height: 1; /* Pastikan centering vertikal */
+    text-decoration: none;
+    line-height: 1;
     display: flex;
     align-items: center;
 }
+*/
 
 .chat-header img {
     width: 2.5rem; /* Ukuran ikon di header, 40px */
@@ -109,18 +111,20 @@ body {
     color: var(--dark-text-secondary);
 }
 
+/* Dihilangkan karena tidak ada di HTML:
 .header-icons {
     display: flex;
     align-items: center;
-    gap: 1.25rem; /* Jarak antar ikon di header */
+    gap: 1.25rem;
     margin-left: 1rem;
 }
 
 .header-icons .icon {
-    font-size: 1.3rem; /* Ukuran ikon header */
+    font-size: 1.3rem;
     color: var(--dark-icon-color);
     cursor: pointer;
 }
+*/
 
 /* === Chat Box (Area Pesan - Dark Mode) === */
 .chat-box {
@@ -243,18 +247,24 @@ body {
     display: block;
 }
 
-/* === Form Input Chat (WhatsApp Style with Fixed Icons) === */
+/* === Form Input Chat (WhatsApp Style - Diperbaiki) === */
 .chat-form {
     display: flex;
+    align-items: flex-end; /* Align item ke bawah untuk input dan button */
     background-color: var(--dark-header-bg); /* Background dark mode untuk form */
     border-top: 0.0625rem solid var(--dark-input-bg);
+    /* Padding untuk menghindari navigasi mobile dan memberi ruang ekstra */
     padding-bottom: calc(env(safe-area-inset-bottom, 0.5rem) + 0.5rem); /* default 8px + 8px */
     flex-shrink: 0;
-    align-items: center; 
-    gap: 10px; 
-    max-width: 600px;
-    margin: 20px auto; 
-    padding: 8 16px;
+    gap: 0.5rem; /* Jarak antar elemen di form */
+
+    /* Perbaikan utama: Pastikan form mengambil 100% lebar dan padding konsisten */
+    width: 100%; /* Pastikan form mengisi 100% lebar container parent (.chat-container) */
+    padding-left: 0.75rem; /* 12px padding kiri */
+    padding-right: 0.75rem; /* 12px padding kanan */
+    padding-top: 0.5rem; /* 8px padding atas */
+    /* Hapus max-width dan margin: auto yang menyebabkan form menyusut */
+    /* Hapus juga padding yang salah format: padding: 8 16px; */
 }
 
 .input-wrapper {
@@ -267,27 +277,17 @@ body {
     box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
     min-height: 2.75rem; /* 44px, tinggi minimum untuk wrapper */
     transition: box-shadow 0.2s ease;
-    padding: 10px 14px
+    /* Perbaikan: Hapus padding dari sini. Padding akan ditangani oleh textarea */
+    /* padding: 10px 14px */
 }
 
 /* Fokus pada wrapper, bukan pada textarea */
-
-.input-chat-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 0 16px;
-}
-
 .input-wrapper:focus-within {
     box-shadow: 0 0 0 0.125rem rgba(0, 150, 136, 0.5); /* Hijau WhatsApp saat fokus */
 }
 
 textarea#message-input {
     flex-grow: 1;
-    padding: 0.75rem 1rem; /* Padding default */
     border: none;
     background-color: transparent; /* Transparan agar background wrapper terlihat */
     color: var(--dark-text-primary); /* Warna teks input */
@@ -301,9 +301,8 @@ textarea#message-input {
     overflow-y: auto;
     white-space: pre-wrap;
     word-wrap: break-word;
-    /* Sesuaikan padding untuk memberi ruang ikon */
-    padding-left: 2.5rem; /* Ruang untuk ikon emoji di kiri */
-    padding-right: 2.5rem; /* Ruang untuk ikon paperclip di kanan */
+    /* Perbaikan: Sesuaikan padding hanya untuk teks. Ikon tidak ada lagi */
+    padding: 0.75rem 1rem; /* 12px atas/bawah, 16px kiri/kanan */
 }
 
 textarea#message-input::placeholder {
@@ -311,36 +310,31 @@ textarea#message-input::placeholder {
     opacity: 0.8;
 }
 
-/* Ikon di dalam input chat */
-.input-icon {
-    position: absolute; /* Posisikan absolut di dalam wrapper */
-    font-size: 1.5rem; /* Ukuran ikon */
-    color: var(--dark-icon-color);
-    line-height: 1; /* Pastikan centering vertikal */
-    z-index: 1; /* Pastikan di atas textarea */
-    pointer-events: none; /* Penting: agar tidak menghalangi klik pada textarea */
-}
-
-.left-icon {
-    left: 0.75rem; /* 12px dari kiri */
-}
-
-.right-icon {
-    right: 0.75rem; /* 12px dari kanan */
-}
-
+/* Dihilangkan karena tidak ada di HTML:
+.input-icon { ... }
+.left-icon { ... }
+.right-icon { ... }
+*/
 
 /* Tombol Kirim (Send Only) */
 .send-button {
     background-color: var(--whatsapp-light-green);
-    border: none; 
-    padding: 10px; 
-    border-radius: 8px;
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+    color: white; /* Tambahkan warna teks kembali */
+    border: none;
+    width: 3rem; /* 48px */
+    height: 3rem; /* 48px */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem; /* Ukuran ikon yang lebih besar */
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    flex-shrink: 0;
+    /* Hapus padding, border-radius yang tumpang tindih */
+    /* padding: 10px; */
+    /* border-radius: 8px; */
 }
 
 .send-button:hover {
@@ -351,7 +345,19 @@ textarea#message-input::placeholder {
     transform: scale(0.95);
 }
 
+.send-button:disabled {
+    background-color: #b0b0b0;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
 
+/* Ikon Kirim */
+.send-button::before {
+    content: '▶'; /* Ikon play segitiga */
+    transform: rotate(-90deg); /* Putar untuk jadi ikon kirim */
+    display: block;
+    line-height: 1;
+}
 
 /* === Pesan Error === */
 .error-message {
@@ -373,12 +379,10 @@ textarea#message-input::placeholder {
 @media (max-width: 768px) {
     html { font-size: 16px; }
     .chat-header { padding: 0.75rem 0.75rem; }
-    .back-button { font-size: 1.3rem; margin-right: 0.8rem; }
+    /* Menghilangkan media query untuk .back-button dan .header-icons */
     .chat-header img { width: 2.2rem; height: 2.2rem; margin-right: 0.6rem; }
     .group-info h2 { font-size: 1rem; }
     .group-info p { font-size: 0.75rem; }
-    .header-icons { gap: 1rem; }
-    .header-icons .icon { font-size: 1.2rem; }
     .chat-box { padding: 0.5rem 0.75rem; }
     .message { font-size: 0.85rem; }
     .chat-form { padding: 0.4rem 0.4rem; gap: 0.4rem; }
@@ -389,12 +393,11 @@ textarea#message-input::placeholder {
         font-size: 0.9rem;
         min-height: 2.5rem;
         max-height: 7rem;
-        padding-left: 2.3rem; /* Ruang untuk ikon emoji */
-        padding-right: 2.3rem; /* Ruang untuk ikon paperclip */
+        /* Hapus padding-left/right untuk ikon */
+        /* padding-left: 2.3rem; */
+        /* padding-right: 2.3rem; */
     }
-    .input-icon { font-size: 1.3rem; }
-    .left-icon { left: 0.6rem; }
-    .right-icon { right: 0.6rem; }
+    /* Menghilangkan media query untuk .input-icon, .left-icon, .right-icon */
 
     .send-button { width: 2.75rem; height: 2.75rem; font-size: 1.3rem; }
 }
@@ -402,12 +405,10 @@ textarea#message-input::placeholder {
 @media (max-width: 480px) {
     html { font-size: 17px; }
     .chat-header { padding: 0.6rem 0.6rem; }
-    .back-button { font-size: 1.2rem; margin-right: 0.6rem; }
+    /* Menghilangkan media query untuk .back-button dan .header-icons */
     .chat-header img { width: 2rem; height: 2rem; margin-right: 0.5rem; }
     .group-info h2 { font-size: 0.95rem; }
     .group-info p { font-size: 0.7rem; }
-    .header-icons { gap: 0.8rem; }
-    .header-icons .icon { font-size: 1.1rem; }
     .chat-box { padding: 0.4rem 0.6rem; }
     .message { font-size: 0.8rem; }
     .chat-form { padding: 0.3rem 0.3rem; gap: 0.3rem; }
@@ -418,12 +419,11 @@ textarea#message-input::placeholder {
         font-size: 0.85rem;
         min-height: 2.3rem;
         max-height: 6rem;
-        padding-left: 2rem; /* Ruang untuk ikon emoji */
-        padding-right: 2rem; /* Ruang untuk ikon paperclip */
+        /* Hapus padding-left/right untuk ikon */
+        /* padding-left: 2rem; */
+        /* padding-right: 2rem; */
     }
-    .input-icon { font-size: 1.2rem; }
-    .left-icon { left: 0.5rem; }
-    .right-icon { right: 0.5rem; }
+    /* Menghilangkan media query untuk .input-icon, .left-icon, .right-icon */
 
     .send-button { width: 2.5rem; height: 2.5rem; font-size: 1.2rem; }
 }
@@ -440,11 +440,14 @@ textarea#message-input::placeholder {
     textarea#message-input { min-height: 2rem; max-height: 5rem; }
     .send-button { width: 2.2rem; height: 2.2rem; font-size: 1rem; }
 
+    /* Hapus padding-left/right untuk ikon */
+    /*
     textarea#message-input {
-        padding-left: 1.8rem; /* Lebih kecil di landscape */
+        padding-left: 1.8rem;
         padding-right: 1.8rem;
     }
     .input-icon { font-size: 1.1rem; }
     .left-icon { left: 0.4rem; }
     .right-icon { right: 0.4rem; }
+    */
 }
