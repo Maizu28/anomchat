@@ -136,9 +136,7 @@ chatForm.addEventListener("submit", async (e) => {
     if (!message) return; // Jangan kirim pesan kosong
 
     // Nonaktifkan input dan tombol saat mengirim
-    input.disabled = true;
-    sendMessageButton.disabled = true;
-    sendMessageButton.innerHTML = '⏳'; // Loading spinner atau teks "Mengirim..."
+    
 
     const tempMessage = {
         username: "Anda",
