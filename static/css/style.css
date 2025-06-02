@@ -246,13 +246,15 @@ body {
 /* === Form Input Chat (WhatsApp Style with Fixed Icons) === */
 .chat-form {
     display: flex;
-    align-items: flex-end;
-    padding: 0.5rem 0.75rem; /* 8px 12px padding kiri-kanan */
     background-color: var(--dark-header-bg); /* Background dark mode untuk form */
     border-top: 0.0625rem solid var(--dark-input-bg);
     padding-bottom: calc(env(safe-area-inset-bottom, 0.5rem) + 0.5rem); /* default 8px + 8px */
     flex-shrink: 0;
-    gap: 0.5rem; /* Jarak antar elemen di form */
+    align-items: center; 
+    gap: 10px; 
+    max-width: 600px;
+    margin: 20px auto; 
+    padding: 8 16px;
 }
 
 .input-wrapper {
@@ -269,6 +271,16 @@ body {
 }
 
 /* Fokus pada wrapper, bukan pada textarea */
+
+.input-chat-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
 .input-wrapper:focus-within {
     box-shadow: 0 0 0 0.125rem rgba(0, 150, 136, 0.5); /* Hijau WhatsApp saat fokus */
 }
