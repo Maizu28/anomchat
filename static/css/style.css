@@ -10,39 +10,42 @@
     --whatsapp-blue-check: #34B7F1;
 }
 
-/* === PENTING: Kontrol Skala Keseluruhan === */
+/* === Pastikan HTML dan Body mengisi seluruh viewport === */
+html, body {
+    height: 100%; /* Pastikan keduanya mengisi 100% tinggi */
+    width: 100%;  /* Pastikan keduanya mengisi 100% lebar */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Mencegah scroll pada level ini */
+}
+
+/* === Kontrol Skala Keseluruhan (untuk tampilan lebih besar) === */
+/* Kita akan set font-size dasar lebih besar untuk mobile */
 html {
     font-size: 16px; /* Default desktop base font size */
-    height: 100%; /* Pastikan HTML mengambil 100% tinggi */
-    overflow: hidden; /* Mencegah scroll pada HTML jika tidak diperlukan */
+    /* Untuk mobile, kita akan override ini di media query */
 }
 
 body {
     font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: var(--whatsapp-background);
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%; /* Pastikan body mengambil 100% tinggi dari HTML */
-    width: 100%; /* Pastikan body mengambil 100% lebar */
+    align-items: flex-start; /* Mengubah align-items agar konten menempel di atas */
     color: var(--whatsapp-text-dark);
     font-size: 1rem; /* Menggunakan rem untuk skalabilitas */
-    overflow: hidden; /* Mencegah scroll pada body */
 }
 
 .chat-container {
     background-color: #ffffff;
     width: 100%; /* Selalu 100% lebar */
-    height: 100vh; /* Selalu 100% tinggi viewport */
+    height: 100%; /* Mengisi 100% tinggi dari parent (body) */
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Pastikan konten tidak meluber */
-    box-shadow: none; /* Hilangkan shadow */
-    border-radius: 0; /* Hilangkan border radius */
-    /* Pastikan tidak ada margin yang membuatnya menyusut */
-    margin: 0;
+    overflow: hidden; /* Pastikan konten tidak meluber keluar */
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0; /* Pastikan tidak ada margin yang membuatnya menyusut */
 }
 
 /* === Header Chat === */
@@ -293,57 +296,59 @@ body {
     font-size: 0.875rem; /* 14px */
 }
 
-/* === Media Queries untuk Skala Adaptif === */
-@media (max-width: 768px) {
+/* === Media Queries untuk Skala Adaptif (diubah untuk lebih agresif) === */
+/* Override font-size dasar HTML untuk layar yang lebih kecil */
+@media (max-width: 1024px) { /* Mulai sesuaikan di tablet landscape */
     html {
-        font-size: 15px; /* Base font-size 15px */
+        font-size: 15px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) { /* Untuk tablet portrait dan sebagian besar ponsel */
     html {
-        font-size: 14px; /* Base font-size 14px untuk layar sangat kecil */
+        font-size: 17px; /* Agak lebih besar di sini */
+    }
+}
+
+@media (max-width: 480px) { /* Untuk ponsel kecil */
+    html {
+        font-size: 18px; /* Lebih besar lagi untuk ponsel */
     }
     .chat-header {
-        padding: 0.9375rem 0.9375rem; /* 15px padding */
+        padding: 1rem 1rem; /* Sedikit lebih kecil tapi tetap nyaman */
     }
     .chat-header img {
-        width: 2.5rem; /* 40px */
-        height: 2.5rem; /* 40px */
-        margin-right: 0.625rem; /* 10px */
-    }
-    .group-info h2 {
-        font-size: 1.125rem; /* 18px */
-    }
-    .group-info p {
-        font-size: 0.75rem; /* 12px */
-    }
-    .chat-form input[type="text"] {
-        padding: 0.625rem 0.875rem; /* 10px 14px */
-        min-height: 2.5rem; /* 40px */
-    }
-    .chat-form button[type="submit"] {
         width: 2.75rem; /* 44px */
         height: 2.75rem; /* 44px */
+        margin-right: 0.75rem; /* 12px */
+    }
+    .group-info h2 {
+        font-size: 1.25rem; /* 20px */
+    }
+    .group-info p {
+        font-size: 0.875rem; /* 14px */
+    }
+    .chat-form input[type="text"] {
+        padding: 0.8rem 1rem; /* 12.8px 16px */
+        min-height: 3rem; /* 48px */
+    }
+    .chat-form button[type="submit"] {
+        width: 3.25rem; /* 52px */
+        height: 3.25rem; /* 52px */
+        font-size: 1.5rem; /* 24px */
     }
 }
 
 /* Gaya tambahan untuk mode landscape pada mobile jika diperlukan */
-@media screen and (orientation: landscape) and (max-height: 480px) {
-    .chat-container {
-        height: 100vh; /* Pastikan tetap 100% viewport height */
-        /* Anda mungkin perlu menyesuaikan padding atau margin elemen di dalamnya */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+    html {
+        font-size: 14px; /* Mungkin perlu sedikit mengecil di landscape mobile */
     }
     .chat-header {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-    .chat-box {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding: 0.75rem 0.75rem;
     }
     .chat-form {
         padding-top: 0.5rem;
-        padding-bottom: calc(env(safe-area-inset-bottom, 0.625rem) + 0.3125rem); /* Sedikit lebih kecil */
+        padding-bottom: calc(env(safe-area-inset-bottom, 0.625rem) + 0.3125rem);
     }
-}
+               }
