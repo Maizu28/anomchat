@@ -1,91 +1,73 @@
 const chatBox = document.getElementById("chat-box");
 const chatForm = document.getElementById("chat-form");
-const input = document.getElementById("message-input");
-const sendMessageButton = chatForm.querySelector("button[type='submit']");
+const input = document.getElementById("message-input"); // Ini sekarang adalah textarea
+const sendMessageButton = chatForm.querySelector(".send-button"); // Selector disesuaikan
 
 // Inisialisasi koneksi WebSocket
-// Gunakan 'wss://' untuk koneksi aman di lingkungan produksi (Railway)
-// window.location.host akan otomatis menjadi domain aplikasi Anda di Railway
 const socket = new WebSocket(`wss://${window.location.host}`);
 
 // Fungsi untuk memformat timestamp ke WIB (contoh: 09:30)
 function formatTimestamp(isoTimestamp) {
     const date = new Date(isoTimestamp);
-
-    // Periksa apakah tanggal valid setelah parsing
     if (isNaN(date.getTime())) {
         return "Waktu invalid";
     }
-
     const options = {
-        timeZone: "Asia/Jakarta", // Ini adalah kunci untuk mendapatkan waktu WIB (UTC+7)
-        hour: "2-digit",        // Format jam (misal: 09, 17)
-        minute: "2-digit",      // Format menit (misal: 05, 30)
-        hourCycle: "h23",       // Menggunakan format 24 jam (00-23)
+        timeZone: "Asia/Jakarta",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
     };
-
-    let formattedTime = date.toLocaleTimeString("id-ID", options);
-    return formattedTime;
+    return date.toLocaleTimeString("id-ID", options);
 }
 
 // Fungsi untuk menampilkan satu pesan ke chatBox
-// isOptimistic digunakan untuk menandai pesan yang baru dikirim secara lokal
 function displaySingleMessage(message, isOptimistic = false) {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message");
-    // Asumsi: 'Anda' adalah username untuk pengguna lokal (pesan yang baru dikirim)
-    // Jika Anda punya sistem otentikasi, sesuaikan dengan username dari sesi pengguna yang sebenarnya
-    if (message.username === "Anda") {
+    if (message.username === "Anda") { // Asumsi "Anda" untuk pesan lokal
         messageDiv.classList.add("user-local");
     }
     if (isOptimistic) {
-        messageDiv.classList.add("optimistic"); // Tambahkan kelas untuk pesan sementara
+        messageDiv.classList.add("optimistic");
     }
 
-    // Elemen untuk teks pesan (username + isi pesan)
     const messageTextElement = document.createElement("p");
     messageTextElement.classList.add("message-text-content");
-    // Gunakan properti 'message' yang diasumsikan dari respons API/WebSocket
     messageTextElement.innerHTML = `<strong>${message.username}:</strong> ${message.message}`;
 
-    // Elemen terpisah untuk waktu pengiriman
     const timestampElement = document.createElement("div");
     timestampElement.classList.add("timestamp");
     timestampElement.textContent = formatTimestamp(message.timestamp);
 
-    // Masukkan kedua elemen ke dalam messageDiv
     messageDiv.appendChild(messageTextElement);
     messageDiv.appendChild(timestampElement);
 
     chatBox.appendChild(messageDiv);
 
-    // Otomatis scroll ke bawah hanya jika pengguna sudah di paling bawah
-    // atau jika pesan yang baru saja ditambahkan adalah pesan optimistik/milik sendiri
     const isScrolledToBottom =
-        chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 10; // Toleransi 10px
+        chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 10;
     if (isScrolledToBottom || isOptimistic || message.username === "Anda") {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
-
-    return messageDiv; // Mengembalikan elemen untuk potensi manipulasi (mis. hapus kelas optimistic)
+    return messageDiv;
 }
 
 // Fungsi untuk memuat riwayat pesan dari server HTTP
 async function loadMessages() {
     try {
-        const res = await fetch("/messages"); // Request ke endpoint HTTP di Railway Anda
+        const res = await fetch("/messages");
         if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);
         }
         const data = await res.json();
-        chatBox.innerHTML = ""; // Bersihkan chatBox sebelum memuat ulang pesan
+        chatBox.innerHTML = "";
         data.forEach((msg) => {
             displaySingleMessage(msg);
         });
-        chatBox.scrollTop = chatBox.scrollHeight; // Pastikan scroll ke bawah setelah load awal
+        chatBox.scrollTop = chatBox.scrollHeight;
     } catch (error) {
         console.error("Gagal memuat pesan:", error);
-        // Tampilkan pesan error yang lebih informatif di UI
         const errorDiv = document.createElement("div");
         errorDiv.classList.add("error-message");
         errorDiv.textContent = "Gagal memuat riwayat pesan. Silakan coba lagi nanti.";
@@ -94,63 +76,83 @@ async function loadMessages() {
 }
 
 // --- WebSocket Event Listeners ---
-
-// Dipanggil saat koneksi WebSocket berhasil dibuka
 socket.addEventListener("open", (event) => {
     console.log("Terhubung ke WebSocket server di Railway!");
-    loadMessages(); // Muat semua pesan yang ada setelah koneksi terbuka
+    loadMessages();
 });
 
-// Dipanggil saat menerima pesan dari server melalui WebSocket
 socket.addEventListener("message", (event) => {
     const messageData = JSON.parse(event.data);
     console.log("Pesan diterima via WebSocket:", messageData);
-    displaySingleMessage(messageData); // Langsung tampilkan pesan baru
+    displaySingleMessage(messageData);
 });
 
-// Dipanggil saat koneksi WebSocket tertutup (misalnya, server restart)
 socket.addEventListener("close", (event) => {
     console.warn("Koneksi WebSocket terputus:", event.code, event.reason);
-    // Coba sambung ulang setelah beberapa waktu
     setTimeout(() => {
         console.log("Mencoba menyambung kembali WebSocket...");
-        // Implementasi rekoneksi yang lebih canggih mungkin diperlukan untuk aplikasi produksi
-        // Untuk saat ini, kita hanya log dan biarkan browser mencoba terhubung kembali secara otomatis
-    }, 5000); // Coba lagi setelah 5 detik
+    }, 5000);
 });
 
-// Dipanggil saat terjadi error pada koneksi WebSocket
 socket.addEventListener("error", (event) => {
     console.error("Kesalahan WebSocket:", event);
-    // Tampilkan pesan error kepada pengguna jika perlu
 });
 
-// --- Event Listener untuk Form Pengiriman Pesan ---
+// --- Penyesuaian Tinggi Textarea Otomatis dan Ikon Kirim ---
+function adjustTextareaHeight() {
+    input.style.height = 'auto'; // Reset tinggi
+    input.style.height = input.scrollHeight + 'px'; // Atur tinggi sesuai konten
 
+    // Batasi tinggi maksimum
+    const maxHeight = parseFloat(getComputedStyle(input).maxHeight);
+    if (input.scrollHeight > maxHeight) {
+        input.style.overflowY = 'scroll';
+    } else {
+        input.style.overflowY = 'hidden';
+    }
+
+    // Ubah ikon kirim berdasarkan apakah input kosong
+    if (input.value.trim() === '') {
+        sendMessageButton.innerHTML = '🎤'; // Ikon Voice Note (Unicode)
+        // Atau untuk Font Awesome: sendMessageButton.innerHTML = '<i class="fas fa-microphone"></i>';
+        sendMessageButton.type = 'button'; // Ubah menjadi button biasa jika kosong
+        // Jika ini tombol voice note, jangan izinkan pengiriman form
+    } else {
+        sendMessageButton.innerHTML = '▶'; // Ikon Kirim (Unicode)
+        // Atau untuk Font Awesome: sendMessageButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+        sendMessageButton.style.transform = 'rotate(-90deg)'; // Putar ikon kirim
+        sendMessageButton.type = 'submit'; // Ubah kembali menjadi submit jika ada teks
+    }
+}
+
+// Event listener untuk input pada textarea
+input.addEventListener('input', adjustTextareaHeight);
+
+// Panggil sekali saat dimuat untuk set tinggi awal dan ikon
+document.addEventListener('DOMContentLoaded', adjustTextareaHeight);
+
+
+// --- Event Listener untuk Form Pengiriman Pesan ---
 chatForm.addEventListener("submit", async (e) => {
-    e.preventDefault(); // Mencegah halaman reload
+    e.preventDefault();
     const message = input.value.trim();
     if (!message) return; // Jangan kirim pesan kosong
 
-    // Nonaktifkan input dan tombol untuk mencegah pengiriman ganda
+    // Nonaktifkan input dan tombol saat mengirim
     input.disabled = true;
     sendMessageButton.disabled = true;
-    sendMessageButton.textContent = "Mengirim..."; // Atau ubah ikon menjadi loading spinner
+    sendMessageButton.innerHTML = '⏳'; // Loading spinner atau teks "Mengirim..."
 
-    // 1. **Optimistic UI:** Tampilkan pesan secara instan di UI
-    // Gunakan username sementara "Anda" untuk pesan yang baru dikirim secara lokal
     const tempMessage = {
         username: "Anda",
         message: message,
-        timestamp: new Date().toISOString(), // Gunakan waktu saat ini
+        timestamp: new Date().toISOString(),
     };
     const optimisticMessageDiv = displaySingleMessage(tempMessage, true);
-    input.value = ""; // Bersihkan input segera setelah pesan "terkirim"
+    input.value = ""; // Bersihkan input segera
+    adjustTextareaHeight(); // Sesuaikan kembali tinggi textarea setelah input dikosongkan
 
     try {
-        // 2. **Kirim pesan ke server melalui HTTP POST**
-        // Ini memastikan pesan tersimpan di database Anda di Railway.
-        // Server Anda kemudian harus mendorong pesan baru ini ke semua klien via WebSocket.
         const res = await fetch("/send", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -160,32 +162,26 @@ chatForm.addEventListener("submit", async (e) => {
         const result = await res.json();
 
         if (result.status === "success") {
-            // Hapus kelas optimistic setelah konfirmasi dari server.
-            // Pesan yang sebenarnya akan datang via WebSocket dan mungkin
-            // menggantikan/melengkapi pesan optimistik ini.
             optimisticMessageDiv.classList.remove("optimistic");
-            optimisticMessageDiv.classList.add("sent"); // Opsi: tambahkan kelas 'sent'
+            optimisticMessageDiv.classList.add("sent");
         } else {
-            // Jika ada error dari server, tandai pesan sebagai gagal
             alert(result.message || "Gagal mengirim pesan");
             optimisticMessageDiv.classList.add("failed");
             optimisticMessageDiv.title = result.message || "Pengiriman gagal";
         }
     } catch (error) {
-        // Tangani error jaringan
         console.error("Error saat mengirim pesan:", error);
         alert("Terjadi kesalahan jaringan atau server saat mengirim pesan.");
         optimisticMessageDiv.classList.add("failed");
         optimisticMessageDiv.title = "Kesalahan jaringan/server";
     } finally {
-        // Aktifkan kembali input dan tombol setelah proses selesai
         input.disabled = false;
         sendMessageButton.disabled = false;
-        // Kembalikan teks tombol ke "Kirim" atau ikon kirim
-        sendMessageButton.innerHTML = ''; // Hapus teks/ikon lama
-        sendMessageButton.textContent = 'Kirim'; // Tambahkan kembali teks default
-        // Atau untuk ikon: sendMessageButton.innerHTML = '&#9654;'; // Segitiga play
-        // Jika Anda menggunakan :before pseudo-element, cukup pastikan itu kembali terlihat
-        input.focus(); // Fokuskan kembali input agar pengguna bisa langsung mengetik lagi
+        adjustTextareaHeight(); // Set ikon kembali setelah pengiriman
+        input.focus();
     }
 });
+
+// Anda bisa menambahkan event listener untuk tombol emoji dan attachment di sini
+// document.querySelector('.emoji-button').addEventListener('click', () => alert('Emoji clicked!'));
+// document.querySelector('.attachment-button').addEventListener('click', () => alert('Attachment clicked!'));
