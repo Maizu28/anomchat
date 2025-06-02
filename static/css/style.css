@@ -265,6 +265,7 @@ body {
     box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
     min-height: 2.75rem; /* 44px, tinggi minimum untuk wrapper */
     transition: box-shadow 0.2s ease;
+    padding: 10px 14px
 }
 
 /* Fokus pada wrapper, bukan pada textarea */
@@ -320,19 +321,14 @@ textarea#message-input::placeholder {
 /* Tombol Kirim (Send Only) */
 .send-button {
     background-color: var(--whatsapp-light-green);
-    color: white;
-    border: none;
-    width: 3rem; /* 48px */
-    height: 3rem; /* 48px */
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem; /* Ukuran ikon yang lebih besar */
+    border: none; 
+    padding: 10px; 
+    border-radius: 8px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
     cursor: pointer;
-    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    flex-shrink: 0;
+    transition: background-color 0.2s ease;
 }
 
 .send-button:hover {
@@ -343,11 +339,6 @@ textarea#message-input::placeholder {
     transform: scale(0.95);
 }
 
-.send-button:disabled {
-    background-color: #b0b0b0;
-    cursor: not-allowed;
-    opacity: 0.8;
-}
 
 
 /* === Pesan Error === */
