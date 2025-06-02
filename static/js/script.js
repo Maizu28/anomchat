@@ -33,9 +33,9 @@ function formatTimestamp(isoTimestamp) {
 function displaySingleMessage(message, isOptimistic = false) {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message");
-    // Asumsi: 'UserLocalAnomChat' adalah username default untuk pengguna lokal Anda
-    // Anda mungkin perlu menggantinya dengan username dari sesi pengguna yang sebenarnya
-    if (message.username === "UserLocalAnomChat" || message.username === "Anda") {
+    // Asumsi: 'Anda' adalah username untuk pengguna lokal (pesan yang baru dikirim)
+    // Jika Anda punya sistem otentikasi, sesuaikan dengan username dari sesi pengguna yang sebenarnya
+    if (message.username === "Anda") {
         messageDiv.classList.add("user-local");
     }
     if (isOptimistic) {
@@ -45,8 +45,7 @@ function displaySingleMessage(message, isOptimistic = false) {
     // Elemen untuk teks pesan (username + isi pesan)
     const messageTextElement = document.createElement("p");
     messageTextElement.classList.add("message-text-content");
-    // Perhatikan: Properi pesan mungkin 'message_text' atau 'message' tergantung backend Anda
-    // Saya gunakan 'message' di sini untuk konsistensi dengan body JSON
+    // Gunakan properti 'message' yang diasumsikan dari respons API/WebSocket
     messageTextElement.innerHTML = `<strong>${message.username}:</strong> ${message.message}`;
 
     // Elemen terpisah untuk waktu pengiriman
@@ -115,9 +114,8 @@ socket.addEventListener("close", (event) => {
     // Coba sambung ulang setelah beberapa waktu
     setTimeout(() => {
         console.log("Mencoba menyambung kembali WebSocket...");
-        // Untuk aplikasi yang lebih robust, Anda bisa mencoba inisialisasi ulang `socket`
-        // atau refresh halaman jika kehilangan koneksi adalah masalah besar.
-        // window.location.reload(); // Mungkin terlalu agresif
+        // Implementasi rekoneksi yang lebih canggih mungkin diperlukan untuk aplikasi produksi
+        // Untuk saat ini, kita hanya log dan biarkan browser mencoba terhubung kembali secara otomatis
     }, 5000); // Coba lagi setelah 5 detik
 });
 
@@ -152,7 +150,7 @@ chatForm.addEventListener("submit", async (e) => {
     try {
         // 2. **Kirim pesan ke server melalui HTTP POST**
         // Ini memastikan pesan tersimpan di database Anda di Railway.
-        // Server Anda kemudian harus mendorong pesan ini ke semua klien via WebSocket.
+        // Server Anda kemudian harus mendorong pesan baru ini ke semua klien via WebSocket.
         const res = await fetch("/send", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -187,8 +185,4 @@ chatForm.addEventListener("submit", async (e) => {
         input.focus(); // Fokuskan kembali input agar pengguna bisa langsung mengetik lagi
     }
 });
-
-// --- Inisialisasi Awal ---
-// `loadMessages()` akan dipanggil saat koneksi WebSocket `open`.
-// Jika Anda ingin memuat pesan bahkan sebelum WebSocket terhubung:
-// window.onload = loadMessages; // Uncomment jika ini yang Anda inginkan
+                
