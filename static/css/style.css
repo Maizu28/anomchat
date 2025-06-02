@@ -10,50 +10,52 @@
     --whatsapp-blue-check: #34B7F1;
 }
 
+html {
+    font-size: 100%; /* Default 16px */
+}
+
 body {
-    font-family: 'Segoe UI', Helvetica, Arial, sans-serif; /* Font lebih dekat ke WhatsApp */
+    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--whatsapp-background); /* Background chat */
+    background-color: var(--whatsapp-background);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     color: var(--whatsapp-text-dark);
-    font-size: 16px; /* Ukuran font dasar yang lebih besar */
+    font-size: 1rem; /* Menggunakan rem untuk skalabilitas */
 }
 
 .chat-container {
     background-color: #ffffff;
-    /* max-width dihilangkan untuk tampilan lebih besar */
-    width: 100%; /* Memenuhi lebar layar */
-    height: 100vh; /* Memenuhi tinggi layar */
+    width: 100%;
+    height: 100vh; /* Pastikan selalu mengambil seluruh tinggi viewport */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    /* margin dihilangkan untuk full screen pada mobile */
-    box-shadow: none; /* Shadow dihilangkan untuk tampilan full screen */
-    border-radius: 0; /* Corner radius dihilangkan untuk tampilan full screen */
+    box-shadow: none;
+    border-radius: 0;
 }
 
 .chat-header {
     display: flex;
     align-items: center;
-    padding: 15px 20px; /* Padding lebih besar */
-    background-color: var(--whatsapp-green); /* Header WhatsApp */
+    padding: 1.25rem 1.25rem; /* 20px padding */
+    background-color: var(--whatsapp-green);
     color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* Pastikan di atas chat-box */
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.1); /* 2px 5px shadow */
+    z-index: 10;
 }
 
 .chat-header img {
-    width: 48px; /* Ukuran ikon lebih besar */
-    height: 48px;
+    width: 3rem; /* 48px */
+    height: 3rem; /* 48px */
     border-radius: 50%;
-    margin-right: 15px;
+    margin-right: 0.9375rem; /* 15px */
     object-fit: cover;
-    background-color: #fff; /* Background putih untuk ikon grup */
-    padding: 2px; /* Border putih tipis */
+    background-color: #fff;
+    padding: 0.125rem; /* 2px */
 }
 
 .group-info {
@@ -62,31 +64,35 @@ body {
 
 .group-info h2 {
     margin: 0;
-    font-size: 1.2em; /* Ukuran judul grup */
+    font-size: 1.25rem; /* 20px */
     font-weight: 500;
 }
 
 .group-info p {
     margin: 0;
-    font-size: 0.85em; /* Ukuran info status */
+    font-size: 0.875rem; /* 14px */
     opacity: 0.9;
     color: rgba(255, 255, 255, 0.8);
 }
 
 .chat-box {
     flex-grow: 1;
-    padding: 10px 15px; /* Padding samping untuk bubble */
+    padding: 0.625rem 0.9375rem; /* 10px 15px */
     overflow-y: auto;
-    background-color: var(--whatsapp-background); /* Background chat */
+    background-color: var(--whatsapp-background);
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Jarak antar pesan sedikit lebih rapat */
-    scroll-behavior: smooth; /* Smooth scroll */
+    gap: 0.5rem; /* 8px */
+    scroll-behavior: smooth;
+    /* Tambahkan background image untuk gaya WhatsApp */
+    background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_01b0fcc98647007e997426639c053c7c.png'); /* Contoh, ganti dengan URL Anda */
+    background-repeat: repeat;
+    background-size: 15rem; /* Sesuaikan ukuran pattern jika perlu */
 }
 
 /* Scrollbar styling for a cleaner look */
 .chat-box::-webkit-scrollbar {
-    width: 6px;
+    width: 0.375rem; /* 6px */
 }
 
 .chat-box::-webkit-scrollbar-track {
@@ -95,26 +101,25 @@ body {
 
 .chat-box::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 3px;
+    border-radius: 0.1875rem; /* 3px */
 }
 
 .chat-box::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
-
 .message {
-    padding: 8px 12px; /* Padding bubble pesan */
-    border-radius: 8px; /* Rounded corners */
-    max-width: 75%; /* Batasi lebar pesan sedikit lebih kecil dari 80% */
-    position: relative; /* Untuk timestamp */
-    font-size: 0.95em; /* Ukuran font pesan */
+    padding: 0.625rem 0.75rem; /* 10px 12px */
+    border-radius: 0.5rem; /* 8px */
+    max-width: 80%; /* Ditingkatkan sedikit agar lebih besar */
+    position: relative;
+    font-size: 0.95rem; /* 15.2px, sedikit lebih besar */
     line-height: 1.3;
-    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13); /* Shadow mirip WhatsApp */
-    word-wrap: break-word; /* Memastikan teks tidak melebihi batas */
+    box-shadow: 0 0.0625rem 0.03125rem rgba(0, 0, 0, 0.13); /* 1px 0.5px shadow */
+    word-wrap: break-word;
 }
 
-.message::before { /* Membuat "ekor" bubble pesan */
+.message::before {
     content: '';
     position: absolute;
     top: 0;
@@ -127,38 +132,45 @@ body {
 .message:not(.user-local) {
     background-color: var(--whatsapp-bubble-received);
     align-self: flex-start;
-    border-top-left-radius: 0; /* Tidak ada radius di pojok kiri atas */
+    border-top-left-radius: 0.1875rem; /* Sedikit radius untuk ujung */
+    border-bottom-left-radius: 0.1875rem; /* Sedikit radius untuk ujung */
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
 }
 
 .message:not(.user-local)::before {
-    border-width: 0 10px 10px 0;
+    border-width: 0 0.625rem 0.625rem 0; /* 0 10px 10px 0 */
     border-color: transparent var(--whatsapp-bubble-received) transparent transparent;
-    left: -8px; /* Posisi ekor */
+    left: -0.5rem; /* -8px */
+    top: 0.0625rem; /* 1px */
 }
-
 
 /* Pesan Dikirim (kanan) */
 .message.user-local {
     background-color: var(--whatsapp-bubble-sent);
     align-self: flex-end;
-    border-top-right-radius: 0; /* Tidak ada radius di pojok kanan atas */
+    border-top-right-radius: 0.1875rem; /* Sedikit radius untuk ujung */
+    border-bottom-right-radius: 0.1875rem; /* Sedikit radius untuk ujung */
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
 }
 
 .message.user-local::before {
-    border-width: 10px 10px 0 0;
+    border-width: 0.625rem 0.625rem 0 0; /* 10px 10px 0 0 */
     border-color: var(--whatsapp-bubble-sent) transparent transparent transparent;
-    right: -8px; /* Posisi ekor */
+    right: -0.5rem; /* -8px */
+    top: 0.0625rem; /* 1px */
 }
 
 .message.optimistic {
     opacity: 0.7;
-    border: 1px dashed #bbb;
-    box-shadow: none; /* Hilangkan shadow pada optimistic */
+    border: 0.0625rem dashed #bbb; /* 1px dashed */
+    box-shadow: none;
 }
 
 .message.failed {
     background-color: #ffdddd;
-    border: 1px solid #f00;
+    border: 0.0625rem solid #f00;
     color: #c00;
     opacity: 1;
     box-shadow: none;
@@ -166,109 +178,133 @@ body {
 
 .message-text-content {
     margin: 0;
-    padding-bottom: 2px; /* Sedikit ruang antara teks dan timestamp */
+    padding-bottom: 0.125rem; /* 2px */
     color: var(--whatsapp-text-dark);
 }
 
 .message-text-content strong {
-    color: var(--whatsapp-text-dark); /* Username di bubble */
+    color: var(--whatsapp-text-dark);
     font-weight: 600;
 }
 
 .timestamp {
-    font-size: 0.7em; /* Ukuran timestamp lebih kecil */
+    font-size: 0.625rem; /* 10px, lebih kecil */
     color: var(--whatsapp-text-light);
     text-align: right;
-    margin-top: 4px;
-    display: block; /* Pastikan timestamp di baris baru */
+    margin-top: 0.25rem; /* 4px */
+    display: block;
 }
 
 .chat-form {
     display: flex;
-    align-items: flex-end; /* Align item ke bawah untuk input dan button */
-    padding: 10px 15px; /* Padding kiri-kanan lebih besar */
-    background-color: #f0f0f0; /* Background area input */
-    border-top: 1px solid #e0e0e0;
-    padding-bottom: env(safe-area-inset-bottom, 10px); /* Padding untuk menghindari navigasi mobile */
+    align-items: flex-end;
+    padding: 0.625rem 0.9375rem; /* 10px 15px */
+    background-color: #f0f0f0;
+    border-top: 0.0625rem solid #e0e0e0; /* 1px solid */
+    padding-bottom: calc(env(safe-area-inset-bottom, 0.625rem) + 0.625rem); /* Padding untuk menghindari navigasi mobile, ditambah lagi 10px */
 }
 
 .chat-form input[type="text"] {
     flex-grow: 1;
-    padding: 10px 15px; /* Padding input lebih baik */
-    border: none; /* Hilangkan border */
-    border-radius: 20px; /* Lebih bulat */
+    padding: 0.75rem 1rem; /* 12px 16px */
+    border: none;
+    border-radius: 1.25rem; /* 20px */
     background-color: #fff;
-    font-size: 1em;
-    margin-right: 8px;
+    font-size: 1rem; /* 16px */
+    margin-right: 0.5rem; /* 8px */
     outline: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    resize: none; /* Cegah resize */
-    min-height: 40px; /* Tinggi minimum untuk input */
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1); /* 1px 3px shadow */
+    resize: none;
+    min-height: 2.75rem; /* 44px, tinggi minimum untuk input */
     line-height: 1.4;
     transition: box-shadow 0.2s ease;
 }
 
 .chat-form input[type="text"]:focus {
-    box-shadow: 0 0 0 2px var(--whatsapp-light-green); /* Shadow saat fokus */
+    box-shadow: 0 0 0 0.125rem var(--whatsapp-light-green); /* 2px shadow saat fokus */
 }
 
 .chat-form button[type="submit"] {
-    background-color: var(--whatsapp-light-green); /* Warna tombol kirim WhatsApp */
+    background-color: var(--whatsapp-light-green);
     color: white;
     border: none;
-    width: 48px; /* Ukuran tombol bulat */
-    height: 48px;
-    border-radius: 50%; /* Tombol bulat */
+    width: 3rem; /* 48px */
+    height: 3rem; /* 48px */
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2em; /* Ukuran ikon di tombol */
+    font-size: 1.375rem; /* 22px untuk ikon */
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1); /* 1px 3px shadow */
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .chat-form button[type="submit"]:hover {
-    background-color: #075E54; /* Sedikit lebih gelap saat hover */
+    background-color: #075E54;
 }
 
 .chat-form button[type="submit"]:active {
-    transform: scale(0.95); /* Efek klik */
+    transform: scale(0.95);
 }
 
 .chat-form button[type="submit"]:disabled {
-    background-color: #b0b0b0; /* Warna abu-abu saat disabled */
+    background-color: #b0b0b0;
     cursor: not-allowed;
     opacity: 0.8;
 }
 
-/* Pesan error untuk tampilan gagal load */
-.error-message {
-    text-align: center;
-    color: #d9534f;
-    padding: 10px;
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-size: 0.9em;
-}
-
-/* Media Queries untuk memastikan responsivitas, meskipun sudah mobile-first */
-@media (max-width: 768px) {
-    body {
-        font-size: 15px; /* Sedikit lebih kecil di layar yang lebih sempit */
-    }
-}
-
-/* Tambahkan ini di bagian bawah CSS jika Anda ingin meniru ikon "send" WhatsApp */
+/* Menggunakan pseudo-element untuk ikon kirim */
 .chat-form button[type="submit"]::before {
     content: '▶'; /* Karakter play segitiga */
     transform: rotate(-90deg); /* Putar untuk jadi ikon kirim */
     display: block;
-    line-height: 1; /* Pastikan tidak ada spasi ekstra */
+    line-height: 1;
 }
-/* Untuk tampilan yang lebih akurat, gunakan SVG atau Font Awesome untuk ikon kirim */
-/* Contoh (jika Anda menyertakan Font Awesome): */
-/* .chat-form button[type="submit"]::before { content: "\f1d8"; font-family: "Font Awesome 5 Free"; font-weight: 900; } */
-    
+
+.error-message {
+    text-align: center;
+    color: #d9534f;
+    padding: 0.625rem; /* 10px */
+    background-color: #f2dede;
+    border: 0.0625rem solid #ebccd1; /* 1px solid */
+    border-radius: 0.3125rem; /* 5px */
+    margin-top: 0.625rem; /* 10px */
+    font-size: 0.875rem; /* 14px */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    /* Pada layar yang lebih kecil, mungkin ada baiknya mengurangi font-size dasar HTML */
+    html {
+        font-size: 93.75%; /* Mengurangi font-size dasar menjadi 15px */
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 87.5%; /* Mengurangi font-size dasar menjadi 14px untuk layar sangat kecil */
+    }
+    .chat-header {
+        padding: 0.9375rem 0.9375rem; /* 15px padding */
+    }
+    .chat-header img {
+        width: 2.5rem; /* 40px */
+        height: 2.5rem; /* 40px */
+        margin-right: 0.625rem; /* 10px */
+    }
+    .group-info h2 {
+        font-size: 1.125rem; /* 18px */
+    }
+    .group-info p {
+        font-size: 0.75rem; /* 12px */
+    }
+    .chat-form input[type="text"] {
+        padding: 0.625rem 0.875rem; /* 10px 14px */
+        min-height: 2.5rem; /* 40px */
+    }
+    .chat-form button[type="submit"] {
+        width: 2.75rem; /* 44px */
+        height: 2.75rem; /* 44px */
+    }
+        }
