@@ -135,7 +135,7 @@ chatForm.addEventListener("submit", async (e) => {
     // Nonaktifkan input dan tombol untuk mencegah pengiriman ganda
     input.disabled = true;
     sendMessageButton.disabled = true;
-    sendMessageButton.textContent = "Mengirim...";
+    sendMessageButton.textContent = "Mengirim..."; // Atau ubah ikon menjadi loading spinner
 
     // 1. **Optimistic UI:** Tampilkan pesan secara instan di UI
     // Gunakan username sementara "Anda" untuk pesan yang baru dikirim secara lokal
@@ -181,8 +181,11 @@ chatForm.addEventListener("submit", async (e) => {
         // Aktifkan kembali input dan tombol setelah proses selesai
         input.disabled = false;
         sendMessageButton.disabled = false;
-        sendMessageButton.textContent = "Kirim";
+        // Kembalikan teks tombol ke "Kirim" atau ikon kirim
+        sendMessageButton.innerHTML = ''; // Hapus teks/ikon lama
+        sendMessageButton.textContent = 'Kirim'; // Tambahkan kembali teks default
+        // Atau untuk ikon: sendMessageButton.innerHTML = '&#9654;'; // Segitiga play
+        // Jika Anda menggunakan :before pseudo-element, cukup pastikan itu kembali terlihat
         input.focus(); // Fokuskan kembali input agar pengguna bisa langsung mengetik lagi
     }
 });
-                
