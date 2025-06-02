@@ -1,6 +1,6 @@
 const chatBox = document.getElementById("chat-box");
 const chatForm = document.getElementById("chat-form");
-const input = document.getElementById("message-input"); // Ini sekarang adalah textarea
+const input = document.getElementById("message-input"); // Ini adalah textarea
 const sendMessageButton = chatForm.querySelector(".send-button"); // Selector disesuaikan
 
 // Inisialisasi koneksi WebSocket
@@ -98,7 +98,7 @@ socket.addEventListener("error", (event) => {
     console.error("Kesalahan WebSocket:", event);
 });
 
-// --- Penyesuaian Tinggi Textarea Otomatis dan Ikon Kirim ---
+// --- Penyesuaian Tinggi Textarea Otomatis ---
 function adjustTextareaHeight() {
     input.style.height = 'auto'; // Reset tinggi
     input.style.height = input.scrollHeight + 'px'; // Atur tinggi sesuai konten
@@ -111,17 +111,14 @@ function adjustTextareaHeight() {
         input.style.overflowY = 'hidden';
     }
 
-    // Ubah ikon kirim berdasarkan apakah input kosong
+    // Tombol kirim selalu aktifkan/nonaktifkan berdasarkan isi input
+    // Ini menggantikan logika voice note/send button
     if (input.value.trim() === '') {
-        sendMessageButton.innerHTML = '🎤'; // Ikon Voice Note (Unicode)
-        // Atau untuk Font Awesome: sendMessageButton.innerHTML = '<i class="fas fa-microphone"></i>';
-        sendMessageButton.type = 'button'; // Ubah menjadi button biasa jika kosong
-        // Jika ini tombol voice note, jangan izinkan pengiriman form
+        sendMessageButton.disabled = true;
+        sendMessageButton.style.backgroundColor = '#b0b0b0'; // Warna disabled
     } else {
-        sendMessageButton.innerHTML = '▶'; // Ikon Kirim (Unicode)
-        // Atau untuk Font Awesome: sendMessageButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-        sendMessageButton.style.transform = 'rotate(-90deg)'; // Putar ikon kirim
-        sendMessageButton.type = 'submit'; // Ubah kembali menjadi submit jika ada teks
+        sendMessageButton.disabled = false;
+        sendMessageButton.style.backgroundColor = 'var(--whatsapp-light-green)'; // Warna aktif
     }
 }
 
@@ -176,12 +173,8 @@ chatForm.addEventListener("submit", async (e) => {
         optimisticMessageDiv.title = "Kesalahan jaringan/server";
     } finally {
         input.disabled = false;
-        sendMessageButton.disabled = false;
-        adjustTextareaHeight(); // Set ikon kembali setelah pengiriman
+        // Tombol kirim akan diatur oleh adjustTextareaHeight berdasarkan input.value
+        adjustTextareaHeight(); // Memastikan tombol kirim kembali ke kondisi benar
         input.focus();
     }
 });
-
-// Anda bisa menambahkan event listener untuk tombol emoji dan attachment di sini
-// document.querySelector('.emoji-button').addEventListener('click', () => alert('Emoji clicked!'));
-// document.querySelector('.attachment-button').addEventListener('click', () => alert('Attachment clicked!'));
