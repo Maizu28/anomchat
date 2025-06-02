@@ -349,13 +349,6 @@ textarea#message-input::placeholder {
     opacity: 0.8;
 }
 
-/* Ikon Kirim */
-.send-button::before {
-    content: '▶';
-    transform: rotate(-90deg);
-    display: block;
-    line-height: 1;
-}
 
 /* === Pesan Error === */
 .error-message {
