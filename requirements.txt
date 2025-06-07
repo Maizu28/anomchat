@@ -1,4 +1,4 @@
 Flask
 Flask-SocketIO
 eventlet
-SQLAlchemy
+flask_sqlalchemy
