@@ -43,21 +43,13 @@ function filterBadWords(text) {
 
 io.on("connection", (socket) => {
   socket.on("sendMessage", async (data) => {
+    data.text = filterBadWords(data.text);
     const message = new Message(data);
     await message.save();
 
-    // Emit 'me' to current socket, 'other' to others
-    socket.emit("message", { ...data, sender: "me" });
-    socket.broadcast.emit("message", { ...data, sender: "other" });
+    socket.emit("message", { ...data, sender: "me", _id: message._id });
+    socket.broadcast.emit("message", { ...data, sender: "other", _id: message._id });
   });
-});
-
-socket.on("sendMessage", async (data) => {
-  data.text = filterBadWords(data.text);
-  const message = new Message(data);
-  await message.save();
-  socket.emit("message", { ...data, sender: "me", _id: message._id });
-  socket.broadcast.emit("message", { ...data, sender: "other", _id: message._id });
 });
 
 const PORT = process.env.PORT || 3000;
