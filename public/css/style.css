@@ -82,14 +82,24 @@ header img {
 }
 
 .reply-btn {
-  position: absolute;
-  right: 5px;
-  top: 5px;
   background: transparent;
   border: none;
   cursor: pointer;
   color: #555;
+  font-size: 14px;
+  position: absolute;
+  top: 5px;
 }
+
+#chat li.me .reply-btn {
+  left: 5px;
+  right: auto;
+}
+
+#chat li.other .reply-btn {
+  left: 5px;
+}
+
 
 #form {
   display: flex;
