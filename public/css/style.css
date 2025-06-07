@@ -92,14 +92,14 @@ header img {
 }
 
 #chat li.me .reply-btn {
-  left: 5px;
+  left: 5px;     /* kiri untuk pesan lokal */
   right: auto;
 }
 
 #chat li.other .reply-btn {
-  left: 5px;
+  right: 5px;    /* kanan untuk pesan orang lain */
+  left: auto;
 }
-
 
 #form {
   display: flex;
