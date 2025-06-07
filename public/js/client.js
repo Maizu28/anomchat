@@ -1,7 +1,6 @@
 const socket = io();
 
 const messages = document.getElementById('messages');
-const form = document.getElementById('form'); // Note: 'form' is not in HTML, need to add it or use button
 const input = document.getElementById('m');
 const sendButton = document.getElementById('send');
 const replyPreview = document.getElementById('reply-preview');
@@ -9,40 +8,42 @@ const replyUsernameSpan = document.getElementById('reply-username');
 const replyMessageTextSpan = document.getElementById('reply-message-text');
 const clearReplyButton = document.getElementById('clear-reply');
 
-let replyToMessage = null; // To store message being replied to
+let replyToMessage = null; // Untuk menyimpan pesan yang sedang dibalas
 
-// Function to generate a random anonymous username
+// Fungsi untuk membuat username anonim acak
 function generateAnonymousUsername() {
-    const adjectives = ['Happy', 'Sad', 'Brave', 'Kind', 'Wise', 'Clever', 'Energetic'];
-    const nouns = ['User', 'Explorer', 'Seeker', 'Dreamer', 'Pioneer', 'Observer'];
+    const adjectives = ['Senang', 'Sedih', 'Berani', 'Baik', 'Bijak', 'Cerdik', 'Energik'];
+    const nouns = ['Pengguna', 'Penjelajah', 'Pencari', 'Pemimpi', 'Pelopor', 'Pengamat'];
     const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
     const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
     return `${randomAdjective} ${randomNoun}`;
 }
 
+// Dapatkan username dari localStorage atau buat yang baru
 let username = localStorage.getItem('anonymousUsername');
 if (!username) {
     username = generateAnonymousUsername();
     localStorage.setItem('anonymousUsername', username);
 }
 
-// Function to append a message to the chat
-function appendMessage(data, isLocal) {
+// Fungsi untuk menambahkan pesan ke chat
+function appendMessage(data) {
     const item = document.createElement('div');
     item.classList.add('message-bubble');
 
-    // Determine if it's a self (local storage) or other (non-local storage) message
-    if (isLocal) {
-        item.classList.add('local-storage');
+    // Tentukan apakah pesan ini dari pengguna lokal (Anda) atau bukan
+    const isCurrentLocalUser = data.username === username;
+    if (isCurrentLocalUser) {
+        item.classList.add('local-user'); // Pesan Anda akan di kanan
     } else {
-        item.classList.add('non-local-storage');
+        item.classList.add('non-local-user'); // Pesan orang lain akan di kiri
     }
 
     let messageContent = '';
     if (data.replyTo && data.replyTo.message) {
         messageContent += `
             <div class="reply-container">
-                <p>Replying to: <span class="reply-username">${data.replyTo.username}</span></p>
+                <p>Membalas: <span class="reply-username">${data.replyTo.username === username ? 'Anda' : data.replyTo.username}</span></p>
                 <p class="reply-message-text">${data.replyTo.message}</p>
             </div>
         `;
@@ -56,17 +57,17 @@ function appendMessage(data, isLocal) {
 
     item.innerHTML = messageContent;
 
-    // Add reply button
+    // Tambahkan tombol balasan
     const replyButton = document.createElement('button');
     replyButton.classList.add('reply-button');
-    replyButton.textContent = 'Reply';
+    replyButton.textContent = 'Balas';
     replyButton.onclick = () => {
         replyToMessage = {
             username: data.username,
             message: data.message,
-            isLocal: data.isLocal
+            isLocalUser: data.isLocalUser // Simpan status lokal untuk balasan
         };
-        replyUsernameSpan.textContent = data.username;
+        replyUsernameSpan.textContent = data.username === username ? 'Anda' : data.username;
         replyMessageTextSpan.textContent = data.message;
         replyPreview.style.display = 'flex';
         input.focus();
@@ -74,52 +75,49 @@ function appendMessage(data, isLocal) {
     item.appendChild(replyButton);
 
     messages.appendChild(item);
-    messages.scrollTop = messages.scrollHeight; // Scroll to bottom
+    messages.scrollTop = messages.scrollHeight; // Gulir ke bawah otomatis
 }
 
-// Load old messages from the server
+// Muat pesan lama dari server saat pertama kali terhubung
 socket.on('load old messages', (msgs) => {
     msgs.forEach(msg => {
-        // Determine if it's a message from the current user based on username
-        const isCurrentLocalUser = msg.username === username;
-        appendMessage(msg, isCurrentLocalUser);
+        appendMessage(msg);
     });
 });
 
-// Handle incoming chat messages
+// Tangani pesan chat yang masuk secara real-time
 socket.on('chat message', (msg) => {
-    // Determine if the incoming message is from the current user (based on the generated username)
-    const isCurrentLocalUser = msg.username === username;
-    appendMessage(msg, isCurrentLocalUser);
+    appendMessage(msg);
 });
 
-// Send message function
+// Fungsi untuk mengirim pesan
 function sendMessage() {
-    if (input.value) {
+    if (input.value.trim()) { // Pastikan input tidak kosong
         const messageData = {
             username: username,
-            message: input.value,
-            isLocal: true, // Mark messages sent from this client as local
-            replyTo: replyToMessage // Will be null if not a reply
+            message: input.value.trim(),
+            isLocalUser: true, // Tandai pesan yang dikirim dari klien ini sebagai lokal
+            replyTo: replyToMessage // Akan null jika bukan balasan
         };
-        socket.emit('chat message', messageData);
-        input.value = '';
-        replyToMessage = null; // Clear reply state
-        replyPreview.style.display = 'none';
+        socket.emit('chat message', messageData); // Kirim pesan ke server
+        input.value = ''; // Kosongkan input
+        replyToMessage = null; // Hapus status balasan
+        replyPreview.style.display = 'none'; // Sembunyikan pratinjau balasan
     }
 }
 
-// Send message on button click
+// Kirim pesan saat tombol 'Kirim' diklik
 sendButton.addEventListener('click', sendMessage);
 
-// Send message on Enter key press
+// Kirim pesan saat tombol 'Enter' ditekan pada input
 input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
+        e.preventDefault(); // Mencegah baris baru di input
         sendMessage();
     }
 });
 
-// Clear reply
+// Hapus status balasan saat tombol 'X' pada pratinjau balasan diklik
 clearReplyButton.addEventListener('click', () => {
     replyToMessage = null;
     replyPreview.style.display = 'none';

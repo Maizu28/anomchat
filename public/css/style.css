@@ -43,9 +43,9 @@ body {
     align-items: center;
     font-weight: bold;
     font-size: 1.2em;
-    /* You can add a background image here */
     background-image: url('https://github.com/Maizu28/anomchat/blob/main/image.png?raw=true'); /* Placeholder image */
     background-size: cover;
+    background-position: center;
 }
 
 .group-name {
@@ -64,7 +64,7 @@ body {
     padding: 10px;
     overflow-y: auto;
     background-image: url('https://user-images.githubusercontent.com/15075759/28719142-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); /* WhatsApp-like background */
-    background-size: contain; /* Or 'cover' depending on preference */
+    background-size: contain;
     display: flex;
     flex-direction: column;
     gap: 5px; /* Spacing between messages */
@@ -78,34 +78,23 @@ body {
     margin-bottom: 5px;
     word-wrap: break-word; /* Ensure long words wrap */
     position: relative; /* For reply button positioning */
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13); /* Subtle shadow for depth */
 }
 
-.message-bubble.other {
-    background-color: #DCF8C6; /* Light green for other's messages */
-    align-self: flex-start; /* Align left */
-    border-top-left-radius: 0; /* Flat corner on top-left */
-    color: #121212; /* Dark text */
+/* Pesan Pengguna Lokal (kanan) */
+.message-bubble.local-user {
+    background-color: #E2FFC7; /* Hijau muda untuk pesan lokal */
+    align-self: flex-end; /* Align kanan */
+    border-top-right-radius: 0; /* Sudut datar di kanan atas */
+    color: #121212; /* Teks gelap */
 }
 
-.message-bubble.self {
-    background-color: #E2FFC7; /* Slightly different green for self messages */
-    align-self: flex-end; /* Align right */
-    border-top-right-radius: 0; /* Flat corner on top-right */
-    color: #121212; /* Dark text */
-}
-
-.message-bubble.local-storage { /* Specific for local storage messages (left) */
-    background-color: #fff; /* White for local storage messages */
-    align-self: flex-start;
-    border-top-left-radius: 0;
-    color: #121212;
-}
-
-.message-bubble.non-local-storage { /* Specific for non-local storage messages (right) */
-    background-color: #dcf8c6; /* WhatsApp light green for non-local storage */
-    align-self: flex-end;
-    border-top-right-radius: 0;
-    color: #121212;
+/* Pesan Pengguna Non-Lokal (kiri) */
+.message-bubble.non-local-user {
+    background-color: #fff; /* Putih untuk pesan non-lokal */
+    align-self: flex-start; /* Align kiri */
+    border-top-left-radius: 0; /* Sudut datar di kiri atas */
+    color: #121212; /* Teks gelap */
 }
 
 .message-username {
@@ -129,9 +118,9 @@ body {
 
 /* Reply Chat Styling */
 .reply-container {
-    background-color: rgba(0, 0, 0, 0.05); /* Slightly transparent background */
+    background-color: rgba(0, 0, 0, 0.05); /* Sedikit transparan */
     padding: 5px;
-    border-left: 3px solid #34B7F1; /* WhatsApp blue border */
+    border-left: 3px solid #34B7F1; /* Border biru WhatsApp */
     margin-bottom: 5px;
     border-radius: 3px;
 }
@@ -178,15 +167,14 @@ body {
     opacity: 1; /* Show on hover */
 }
 
-/* Specific button placement for local vs non-local messages */
-.message-bubble.local-storage .reply-button {
-    right: -30px; /* Position to the right of the bubble */
+/* Penempatan tombol balasan untuk pesan lokal vs non-lokal */
+.message-bubble.local-user .reply-button {
+    left: -30px; /* Posisi di kiri bubble lokal */
 }
 
-.message-bubble.non-local-storage .reply-button {
-    left: -30px; /* Position to the left of the bubble */
+.message-bubble.non-local-user .reply-button {
+    right: -30px; /* Posisi di kanan bubble non-lokal */
 }
-
 
 /* Input Area */
 .chat-input-area {
@@ -280,11 +268,11 @@ body {
         margin-left: 10px;
     }
 
-    .message-bubble.local-storage .reply-button {
-        right: 5px; /* Adjust position for mobile */
+    .message-bubble.local-user .reply-button {
+        left: 5px; /* Adjust position for mobile */
     }
 
-    .message-bubble.non-local-storage .reply-button {
-        left: 5px; /* Adjust position for mobile */
+    .message-bubble.non-local-user .reply-button {
+        right: 5px; /* Adjust position for mobile */
     }
 }

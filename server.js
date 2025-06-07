@@ -15,16 +15,16 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected successfully'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Message Schema (jika tidak dipisahkan ke file lain)
+// Schema Pesan MongoDB
 const messageSchema = new mongoose.Schema({
   username: String,
   message: String,
   timestamp: { type: Date, default: Date.now },
-  isLocal: { type: Boolean, default: false },
-  replyTo: {
+  isLocalUser: { type: Boolean, default: false }, // Menandai apakah pesan ini dari pengguna lokal
+  replyTo: { // Field untuk balasan chat
     username: String,
     message: String,
-    isLocal: Boolean
+    isLocalUser: Boolean
   }
 });
 const Message = mongoose.model('Message', messageSchema);
@@ -37,65 +37,66 @@ try {
   console.log('Banned words loaded:', bannedWords);
 } catch (error) {
   console.error('Error loading bannedWords.json:', error);
-  // Fallback to an empty array if the file doesn't exist or is invalid
+  // Fallback ke array kosong jika file tidak ada atau tidak valid
   bannedWords = [];
 }
 
-// Middleware
+// Middleware untuk menyajikan file statis dari folder public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
+// Route utama untuk menyajikan index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Socket.IO
+// Socket.IO Connection Handler
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('Seorang pengguna terhubung');
 
-  // Load old messages from DB
-  Message.find().sort({ timestamp: 1 }).limit(100) // Limit to last 100 messages for example
+  // Muat pesan lama dari database saat pengguna terhubung
+  Message.find().sort({ timestamp: 1 }).limit(100) // Batasi 100 pesan terakhir
     .then(messages => {
       socket.emit('load old messages', messages);
     })
-    .catch(err => console.error('Error loading old messages:', err));
+    .catch(err => console.error('Error memuat pesan lama:', err));
 
+  // Tangani event 'chat message' dari klien
   socket.on('chat message', async (data) => {
-    let { username, message, isLocal, replyTo } = data;
+    let { username, message, isLocalUser, replyTo } = data;
 
     // Filter Kata Kasar
     bannedWords.forEach(word => {
-      const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Match whole word, case-insensitive
-      message = message.replace(regex, '***'); // Replace with asterisks
+      const regex = new RegExp(`\\b${word}\\b`, 'gi'); // Cocokkan kata utuh, case-insensitive
+      message = message.replace(regex, '***'); // Ganti dengan tanda bintang
     });
 
     const newMessage = new Message({
-      username: username || 'Anonymous',
+      username: username || 'Anonim', // Gunakan username anonim jika tidak ada
       message: message,
-      isLocal: isLocal,
+      isLocalUser: isLocalUser,
       replyTo: replyTo // Akan null jika bukan balasan
     });
 
     try {
-      await newMessage.save();
-      io.emit('chat message', {
+      await newMessage.save(); // Simpan pesan ke database
+      io.emit('chat message', { // Emit pesan ke semua klien yang terhubung
         username: newMessage.username,
         message: newMessage.message,
         timestamp: newMessage.timestamp,
-        isLocal: newMessage.isLocal,
+        isLocalUser: newMessage.isLocalUser,
         replyTo: newMessage.replyTo
       });
     } catch (err) {
-      console.error('Error saving message:', err);
+      console.error('Error menyimpan pesan:', err);
     }
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    console.log('Pengguna terputus');
   });
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server berjalan di port ${PORT}`);
 });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonymous Group Chat</title>
+    <title>Grup Chat Anonim</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="/socket.io/socket.io.js"></script>
 </head>
@@ -12,15 +12,15 @@
         <div class="chat-header">
             <div class="group-avatar"></div>
             <div class="group-info">
-                <div class="group-name">Grup Anomali</div>
-                <div class="group-description">Tempat ngobrol bebas tanpa identitas. Jangan sebar identitas anda.</div>
+                <div class="group-name">Grup Anonim</div>
+                <div class="group-description">Tempat ngobrol tanpa nama</div>
             </div>
         </div>
         <div class="chat-messages" id="messages">
             </div>
         <div class="chat-input-area">
             <div class="reply-preview" id="reply-preview" style="display:none;">
-                <p>Replying to: <span id="reply-username"></span></p>
+                <p>Membalas: <span id="reply-username"></span></p>
                 <p class="reply-message-text" id="reply-message-text"></p>
                 <button class="clear-reply" id="clear-reply">X</button>
             </div>
@@ -29,6 +29,6 @@
         </div>
     </div>
 
-    <script src="/js/client.js"></script>
+    <script src="js/client.js"></script>
 </body>
 </html>
