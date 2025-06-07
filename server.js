@@ -33,20 +33,13 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", async (data) => {
     const message = new Message(data);
     await message.save();
-    io.emit("message", message);
-  });
-});
-
-io.on("connection", (socket) => {
-  socket.on("sendMessage", async (data) => {
-    const message = new Message(data);
-    await message.save();
 
     // Emit 'me' to current socket, 'other' to others
     socket.emit("message", { ...data, sender: "me" });
     socket.broadcast.emit("message", { ...data, sender: "other" });
   });
 });
+
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log("Server running on port", PORT));
