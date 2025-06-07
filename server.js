@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const http = require("http");
 const socketIO = require("socket.io");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const server = http.createServer(app);
@@ -25,14 +26,15 @@ app.get("/", async (req, res) => {
   res.render("index", {
     messages,
     groupName: "Group Anomali",
-    groupPhoto: "image.png",
+    groupPhoto: "https://github.com/Maizu28/anomchat/blob/main/image.png?raw=true",
     groupDescription: "Tempat ngobrol bebas tanpa identitas. Admin akan mengawasi isi obrolan.",
   });
 });
 
-//BAN WORD
+// Baca bannedWords.json sekali saat server start
+const bannedWords = JSON.parse(fs.readFileSync("./bannedWords.json"));
+
 function filterBadWords(text) {
-  const bannedWords = ["anjing", "kontol", "bangsat", "goblok", "babi", "tolol"];
   let filtered = text;
   bannedWords.forEach(word => {
     const pattern = new RegExp(`\\b${word}\\b`, "gi");
