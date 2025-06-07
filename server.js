@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
     });
 
     const newMessage = new Message({
-      username: username || 'Anonim', // Gunakan username anonim jika tidak ada
+      username: username || 'Anomali', // Gunakan username anonim jika tidak ada
       message: message,
       isLocalUser: isLocalUser,
       replyTo: replyTo // Akan null jika bukan balasan
