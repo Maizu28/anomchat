@@ -9,11 +9,12 @@
 <body>
   <div class="chat-container">
     <header>
+    <div>
       <img src="<%= groupPhoto %>" alt="Group" />
-        <div>
+        
             <h1><%= groupName %></h1>
             <p class="group-description"><%= groupDescription %></p>
-        </div>
+    </div>
     </header>
     <ul id="chat">
       <% messages.forEach(m => { %>
