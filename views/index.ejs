@@ -2,38 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title><%= groupName %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= groupInfo.name %></title>
   <link rel="stylesheet" href="/css/style.css" />
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <div class="chat-container">
+  <div class="container">
     <header>
-        <img src="<%= groupPhoto %>" alt="Group" />
-        <div> 
-            <h1><%= groupName %></h1>
-            <p class="group-description"><%= groupDescription %></p>
-        </div>
+      <img src="<%= groupInfo.profilePic %>" alt="Group Profile" class="group-pic" />
+      <div>
+        <h1><%= groupInfo.name %></h1>
+        <p><%= groupInfo.description %></p>
+      </div>
     </header>
 
-    <ul id="chat">
-      <% messages.forEach(m => { %>
-        <li class="<%= m.sender === 'me' ? 'me' : 'other' %>">
-          <% if (m.replyTo) { %>
-            <div class="reply-to"><%= m.replyTo %></div>
-          <% } %>
-          <span><%= m.text %></span>
-          <small><%= m.time %></small>
-          <button class="reply-btn" data-text="<%= m.text %>">↩</button>
-        </li>
-      <% }) %>
-    </ul>
-    <form id="form">
-      <textarea id="input" rows="1" placeholder="Ketik pesan..."></textarea>
-      <button>Kirim</button>
-    </form>
+    <main>
+      <div id="chat-left" class="chat-column"></div>
+      <div id="chat-right" class="chat-column"></div>
+    </main>
+
+    <footer>
+      <textarea id="message-input" placeholder="Tulis pesan... (Enter kirim, Shift+Enter baris baru)"></textarea>
+      <button id="send-btn">Kirim</button>
+      <div id="reply-info" class="reply-info"></div>
+    </footer>
   </div>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/chat.js"></script>
+
+  <script>
+    // Kirim data grup untuk frontend
+    window.GROUP_NAME = "<%= groupInfo.name %>";
+  </script>
+  <script src="/js/main.js"></script>
 </body>
 </html>
