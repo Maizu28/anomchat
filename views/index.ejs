@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= groupName %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="chat-container">
+    <header>
+      <img src="<%= groupPhoto %>" alt="Group" />
+      <h1><%= groupName %></h1>
+    </header>
+    <ul id="chat">
+      <% messages.forEach(m => { %>
+        <li>
+          <% if (m.replyTo) { %>
+            <div class="reply-to"><%= m.replyTo %></div>
+          <% } %>
+          <span><%= m.text %></span>
+          <small><%= m.time %></small>
+          <button class="reply-btn" data-text="<%= m.text %>">↩</button>
+        </li>
+      <% }) %>
+    </ul>
+    <form id="form">
+      <textarea id="input" rows="1" placeholder="Ketik pesan..."></textarea>
+      <button>Kirim</button>
+    </form>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>
