@@ -23,6 +23,7 @@ form.addEventListener("submit", (e) => {
 
 socket.on("message", (msg) => {
   const li = document.createElement("li");
+  li.classList.add(msg.sender === "me" ? "me" : "other");
 
   if (msg.replyTo) {
     const replyDiv = document.createElement("div");
@@ -59,3 +60,10 @@ input.addEventListener("keydown", (e) => {
     }
   }
 });
+
+const msg = {
+  text,
+  replyTo,
+  time: new Date().toLocaleTimeString(),
+  sender: 'me', // Mark message from local device
+};

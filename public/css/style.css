@@ -42,6 +42,37 @@ header img {
   position: relative;
 }
 
+#chat li.me {
+  background: #dcf8c6; /* hijau muda (WhatsApp style) */
+  align-self: flex-end;
+  text-align: right;
+  color: #000;
+}
+
+#chat li.other {
+  background: #ffffff; /* putih untuk pesan orang lain */
+  align-self: flex-start;
+  text-align: left;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+#chat li {
+  max-width: 75%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  position: relative;
+}
+
+#chat {
+  display: flex;
+  flex-direction: column;
+}
+
+
 #chat .reply-to {
   background: #f0f0f0;
   font-size: 0.85em;
