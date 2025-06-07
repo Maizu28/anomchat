@@ -1,61 +1,68 @@
 const socket = io();
-
-// Buat anonId jika belum ada
-if (!localStorage.getItem("anonId")) {
-  localStorage.setItem("anonId", crypto.randomUUID());
-}
-const anonId = localStorage.getItem("anonId");
-
 const form = document.getElementById("form");
 const input = document.getElementById("input");
 const chat = document.getElementById("chat");
 
-form.addEventListener("submit", (e) => {
+let replyTo = "";
+
+form.addEventListener("submit", function (e) {
   e.preventDefault();
-  const text = input.value.trim();
-  if (!text) return;
-
-  const replyTo = input.dataset.replyTo || null;
-  socket.emit("sendMessage", {
-    text,
-    time: new Date().toLocaleTimeString(),
-    replyTo,
-    anonId
-  });
-
-  input.value = "";
-  input.dataset.replyTo = "";
+  if (input.value.trim()) {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const message = {
+      text: input.value,
+      time,
+      replyTo
+    };
+    socket.emit("sendMessage", message);
+    input.value = "";
+    replyTo = "";
+  }
 });
 
-socket.on("message", (data) => {
+socket.on("message", function (msg) {
   const li = document.createElement("li");
-  li.className = data.anonId === anonId ? "me" : "other";
-
-  if (data.replyTo) {
+  li.className = msg.sender;
+  if (msg.replyTo) {
     const replyDiv = document.createElement("div");
     replyDiv.className = "reply-to";
-    replyDiv.textContent = data.replyTo;
+    replyDiv.textContent = msg.replyTo;
     li.appendChild(replyDiv);
   }
-
   const span = document.createElement("span");
-  span.textContent = data.text;
+  span.textContent = msg.text;
+  const time = document.createElement("small");
+  time.textContent = msg.time;
+
+  const replyBtn = document.createElement("button");
+  replyBtn.className = "reply-btn";
+  replyBtn.textContent = "↩";
+  replyBtn.dataset.text = msg.text;
+
+  if (msg.sender === "me") {
+    replyBtn.style.left = "5px";
+  } else {
+    replyBtn.style.right = "5px";
+  }
+
   li.appendChild(span);
-
-  const small = document.createElement("small");
-  small.textContent = data.time;
-  li.appendChild(small);
-
-  const button = document.createElement("button");
-  button.className = "reply-btn";
-  button.textContent = "↩";
-  button.dataset.text = data.text;
-  button.addEventListener("click", () => {
-    input.dataset.replyTo = data.text;
-    input.focus();
-  });
-  li.appendChild(button);
-
+  li.appendChild(time);
+  li.appendChild(replyBtn);
   chat.appendChild(li);
   chat.scrollTop = chat.scrollHeight;
+});
+
+chat.addEventListener("click", function (e) {
+  if (e.target.classList.contains("reply-btn")) {
+    replyTo = e.target.dataset.text;
+    input.focus();
+  }
+});
+
+input.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    form.dispatchEvent(new Event("submit"));
+  }
 });

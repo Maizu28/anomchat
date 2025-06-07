@@ -18,7 +18,7 @@
 
     <ul id="chat">
       <% messages.forEach(m => { %>
-        <li class="<%= m.anonId === anonId ? 'me' : 'other' %>">
+        <li class="<%= m.sender === 'me' ? 'me' : 'other' %>">
           <% if (m.replyTo) { %>
             <div class="reply-to"><%= m.replyTo %></div>
           <% } %>
