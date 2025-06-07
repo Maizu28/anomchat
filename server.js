@@ -27,7 +27,7 @@ app.get("/", async (req, res) => {
     messages,
     groupName: "Group Anomali",
     groupPhoto: "https://github.com/Maizu28/anomchat/blob/main/image.png?raw=true",
-    groupDescription: "Tempat ngobrol bebas tanpa identitas. Admin akan mengawasi isi obrolan.",
+    groupDescription: "Tempat ngobrol bebas tanpa identitas. Jangan ungkapkan identitas anda.",
   });
 });
 
