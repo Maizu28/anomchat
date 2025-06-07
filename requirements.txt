@@ -1,4 +1,4 @@
 Flask
-Flask-SQLAlchemy
-Flask-Cors
-gunicorn
+Flask-SocketIO
+eventlet
+SQLAlchemy

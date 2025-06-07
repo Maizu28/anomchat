@@ -1,36 +1,23 @@
 <!DOCTYPE html>
-<html lang="id">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Anonim Chat</title>
-        <link rel="stylesheet" href="/static/css/style.css" />
-    </head>
-    <body>
-        <div class="chat-container">
-            <div class="chat-header">
-                <img src="/static/img/group-icon.png" alt="Group Icon" />
-                <div class="group-info">
-                    <h2>Anonim Chat</h2>
-                    <p>Grup obrolan publik</p>
-                </div>
-                </div>
+<html>
+<head>
+  <title>Chat Anonim</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>Hai, {{ username }}</h2>
+    <div id="chat-box"></div>
+    <form id="chat-form">
+      <input type="text" id="message-input" placeholder="Ketik pesan..." autocomplete="off">
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
 
-            <div class="chat-box" id="chat-box"></div>
-
-            <form id="chat-form"> 
-                <div class="input-wrapper">
-                    <textarea
-                        id="message-input"
-                        placeholder="Tulis pesan..."
-                        autocomplete="off"
-                        rows="1"
-                    ></textarea>
-                </div>
-                <button type="submit" class="send-button">▶</button>
-            </form>
-        </div>
-        
-        <script src="/static/js/script.js"></script>
-    </body>
+  <script>
+    const USERNAME = "{{ username }}";
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
 </html>
