@@ -12,27 +12,19 @@ body {
   height: 100vh;
 }
 
-.header {
+header {
+  background: #075e54;
+  color: white;
+  padding: 10px;
   display: flex;
   align-items: center;
-  background-color: #00695c; /* warna hijau */
-  padding: 10px 16px; /* perkecil padding */
-  gap: 12px;
 }
 
-.header img {
-  width: 48px;
-  height: 48px;
+header img {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-}
-.header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-.header p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #e0e0e0;
+  margin-right: 10px;
 }
 
 #chat {
@@ -139,6 +131,33 @@ body {
   color: #d9fdd3;
 }
 
+/* Header group style */
+.group-header {
+  display: flex;
+  align-items: center;
+  background-color: #00695c;
+  padding: 8px 16px;
+  gap: 12px;
+}
+
+.group-header img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.group-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.group-description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e0e0e0;
+}
 
 @media (max-width: 600px) {
   #input {
