@@ -37,7 +37,8 @@ const bannedWords = JSON.parse(fs.readFileSync("./bannedWords.json"));
 function filterBadWords(text) {
   let filtered = text;
   bannedWords.forEach(word => {
-    const pattern = new RegExp(`\\b${word}\\b`, "gi");
+    // regex untuk kata yang dimulai dengan 'word' di awal kata dan diikuti 0+ karakter kata
+    const pattern = new RegExp(`\\b${word}\\w*`, "gi");
     filtered = filtered.replace(pattern, "***");
   });
   return filtered;
