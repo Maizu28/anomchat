@@ -24,10 +24,22 @@ app.get("/", async (req, res) => {
   const messages = await Message.find({});
   res.render("index", {
     messages,
-    groupName: "Anon Group",
-    groupPhoto: "https://i.ibb.co/7bQ6pMv/group-photo.jpg",
+    groupName: "Group Anomali",
+    groupPhoto: "image.png",
+    groupDescription: "Tempat ngobrol bebas tanpa identitas. Admin akan mengawasi isi obrolan.",
   });
 });
+
+//BAN WORD
+function filterBadWords(text) {
+  const bannedWords = ["anjing", "kontol", "bangsat", "goblok", "babi", "tolol"];
+  let filtered = text;
+  bannedWords.forEach(word => {
+    const pattern = new RegExp(`\\b${word}\\b`, "gi");
+    filtered = filtered.replace(pattern, "***");
+  });
+  return filtered;
+}
 
 io.on("connection", (socket) => {
   socket.on("sendMessage", async (data) => {
@@ -40,6 +52,13 @@ io.on("connection", (socket) => {
   });
 });
 
+socket.on("sendMessage", async (data) => {
+  data.text = filterBadWords(data.text);
+  const message = new Message(data);
+  await message.save();
+  socket.emit("message", { ...data, sender: "me", _id: message._id });
+  socket.broadcast.emit("message", { ...data, sender: "other", _id: message._id });
+});
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log("Server running on port", PORT));

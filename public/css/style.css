@@ -125,6 +125,12 @@ header img {
   border-radius: 5px;
   cursor: pointer;
 }
+.group-description {
+  font-size: 0.85em;
+  margin: 4px 0 0;
+  color: #d9fdd3;
+}
+
 
 @media (max-width: 600px) {
   #input {

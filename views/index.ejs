@@ -10,7 +10,10 @@
   <div class="chat-container">
     <header>
       <img src="<%= groupPhoto %>" alt="Group" />
-      <h1><%= groupName %></h1>
+        <div>
+            <h1><%= groupName %></h1>
+            <p class="group-description"><%= groupDescription %></p>
+        </div>
     </header>
     <ul id="chat">
       <% messages.forEach(m => { %>
