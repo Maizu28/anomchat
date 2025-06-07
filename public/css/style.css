@@ -12,22 +12,36 @@ body {
   height: 100vh;
 }
 
-header {
-  background: #075e54;
-  color: white;
-  padding: 10px;
+.group-header {
   display: flex;
   align-items: center;
+  background-color: #00695c;
+  padding: 8px 16px;
+  gap: 12px;
+  color: white;
 }
 
-header img {
-  width: 40px;
-  height: 40px;
+.group-header img {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  margin-right: 10px;
+  object-fit: cover;
+}
+
+.group-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.group-description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e0e0e0;
 }
 
 #chat {
+  display: flex;
+  flex-direction: column;
   list-style: none;
   padding: 10px;
   flex-grow: 1;
@@ -35,43 +49,27 @@ header img {
 }
 
 #chat li {
-  background: #dcf8c6;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  position: relative;
-}
-
-#chat li.me {
-  background: #dcf8c6; /* hijau muda (WhatsApp style) */
-  align-self: flex-end;
-  text-align: right;
-  color: #000;
-}
-
-#chat li.other {
-  background: #ffffff; /* putih untuk pesan orang lain */
-  align-self: flex-start;
-  text-align: left;
-  color: #000;
-  border: 1px solid #ccc;
-}
-
-#chat li {
   max-width: 75%;
   display: flex;
   flex-direction: column;
+  background: #dcf8c6;
   border-radius: 8px;
   margin-bottom: 10px;
   padding: 10px;
   position: relative;
 }
 
-#chat {
-  display: flex;
-  flex-direction: column;
+#chat li.me {
+  align-self: flex-end;
+  text-align: right;
 }
 
+#chat li.other {
+  background: #ffffff;
+  align-self: flex-start;
+  text-align: left;
+  border: 1px solid #ccc;
+}
 
 #chat .reply-to {
   background: #f0f0f0;
@@ -92,12 +90,12 @@ header img {
 }
 
 #chat li.me .reply-btn {
-  left: 5px;     /* kiri untuk pesan lokal */
+  left: 5px;
   right: auto;
 }
 
 #chat li.other .reply-btn {
-  right: 5px;    /* kanan untuk pesan orang lain */
+  right: 5px;
   left: auto;
 }
 
@@ -124,39 +122,6 @@ header img {
   margin-left: 5px;
   border-radius: 5px;
   cursor: pointer;
-}
-.group-description {
-  font-size: 0.85em;
-  margin: 4px 0 0;
-  color: #d9fdd3;
-}
-
-/* Header group style */
-.group-header {
-  display: flex;
-  align-items: center;
-  background-color: #00695c;
-  padding: 8px 16px;
-  gap: 12px;
-}
-
-.group-header img {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.group-header h1 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: white;
-}
-
-.group-description {
-  margin: 0;
-  font-size: 0.85rem;
-  color: #e0e0e0;
 }
 
 @media (max-width: 600px) {

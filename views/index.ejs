@@ -8,12 +8,12 @@
 </head>
 <body>
   <div class="chat-container">
-    <header>
-        <img src="<%= groupPhoto %>" alt="Group" />
-        <div> 
-            <h1><%= groupName %></h1>
-            <p class="group-description"><%= groupDescription %></p>
-        </div>
+    <header class="group-header">
+      <img src="<%= groupPhoto %>" alt="Group" />
+      <div> 
+        <h1><%= groupName %></h1>
+        <p class="group-description"><%= groupDescription %></p>
+      </div>
     </header>
 
     <ul id="chat">
@@ -28,11 +28,13 @@
         </li>
       <% }) %>
     </ul>
+
     <form id="form">
       <textarea id="input" rows="1" placeholder="Ketik pesan..."></textarea>
       <button>Kirim</button>
     </form>
   </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/chat.js"></script>
 </body>
