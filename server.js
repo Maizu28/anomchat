@@ -5,40 +5,54 @@ const http = require("http");
 const socketIO = require("socket.io");
 const path = require("path");
 const fs = require("fs");
+const cookieParser = require("cookie-parser");
+const crypto = require("crypto");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 const Message = mongoose.model("Message", {
   text: String,
   time: String,
   replyTo: String,
+  anonId: String
 });
 
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
 
 app.get("/", async (req, res) => {
   const messages = await Message.find({});
+
+  let anonId = req.cookies.anonId;
+  if (!anonId) {
+    anonId = crypto.randomUUID();
+    res.cookie("anonId", anonId, { maxAge: 10 * 365 * 24 * 60 * 60 * 1000 }); // 10 tahun
+  }
+
   res.render("index", {
     messages,
+    anonId,
     groupName: "Group Anomali",
     groupPhoto: "https://github.com/Maizu28/anomchat/blob/main/image.png?raw=true",
-    groupDescription: "Tempat ngobrol bebas tanpa identitas. Jangan ungkapkan identitas anda.",
+    groupDescription: "Tempat ngobrol bebas tanpa identitas. Admin akan mengawasi isi obrolan."
   });
 });
 
-// Baca bannedWords.json sekali saat server start
+// Filter kata kasar
 const bannedWords = JSON.parse(fs.readFileSync("./bannedWords.json"));
 
 function filterBadWords(text) {
   let filtered = text;
   bannedWords.forEach(word => {
-    // regex untuk kata yang dimulai dengan 'word' di awal kata dan diikuti 0+ karakter kata
-    const pattern = new RegExp(`\\b${word}\\w*`, "gi");
+    const pattern = new RegExp(`${word}+`, "gi");
     filtered = filtered.replace(pattern, "***");
   });
   return filtered;
@@ -50,8 +64,7 @@ io.on("connection", (socket) => {
     const message = new Message(data);
     await message.save();
 
-    socket.emit("message", { ...data, sender: "me", _id: message._id });
-    socket.broadcast.emit("message", { ...data, sender: "other", _id: message._id });
+    io.emit("message", { ...data, _id: message._id }); // broadcast ke semua
   });
 });
 

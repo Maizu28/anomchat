@@ -1,69 +1,61 @@
 const socket = io();
+
+// Buat anonId jika belum ada
+if (!localStorage.getItem("anonId")) {
+  localStorage.setItem("anonId", crypto.randomUUID());
+}
+const anonId = localStorage.getItem("anonId");
+
 const form = document.getElementById("form");
 const input = document.getElementById("input");
 const chat = document.getElementById("chat");
 
-let replyTo = "";
-
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const text = input.value.trim();
-  if (text === "") return;
+  if (!text) return;
 
-  const msg = {
+  const replyTo = input.dataset.replyTo || null;
+  socket.emit("sendMessage", {
     text,
-    replyTo,
     time: new Date().toLocaleTimeString(),
-  };
+    replyTo,
+    anonId
+  });
 
-  socket.emit("sendMessage", msg);
   input.value = "";
-  replyTo = "";
+  input.dataset.replyTo = "";
 });
 
-socket.on("message", (msg) => {
+socket.on("message", (data) => {
   const li = document.createElement("li");
-  li.classList.add(msg.sender === "me" ? "me" : "other");
+  li.className = data.anonId === anonId ? "me" : "other";
 
-  if (msg.replyTo) {
+  if (data.replyTo) {
     const replyDiv = document.createElement("div");
     replyDiv.className = "reply-to";
-    replyDiv.textContent = msg.replyTo;
+    replyDiv.textContent = data.replyTo;
     li.appendChild(replyDiv);
   }
 
-  li.innerHTML += `<span>${msg.text}</span><small>${msg.time}</small><button class="reply-btn" data-text="${msg.text}">↩</button>`;
+  const span = document.createElement("span");
+  span.textContent = data.text;
+  li.appendChild(span);
+
+  const small = document.createElement("small");
+  small.textContent = data.time;
+  li.appendChild(small);
+
+  const button = document.createElement("button");
+  button.className = "reply-btn";
+  button.textContent = "↩";
+  button.dataset.text = data.text;
+  button.addEventListener("click", () => {
+    input.dataset.replyTo = data.text;
+    input.focus();
+  });
+  li.appendChild(button);
+
   chat.appendChild(li);
   chat.scrollTop = chat.scrollHeight;
 });
-
-chat.addEventListener("click", (e) => {
-  if (e.target.classList.contains("reply-btn")) {
-    replyTo = e.target.getAttribute("data-text");
-    input.focus();
-  }
-});
-
-input.addEventListener("keydown", (e) => {
-  const isMobile = window.innerWidth <= 600;
-
-  if (e.key === "Enter") {
-    if ((isMobile && !e.shiftKey) || (!isMobile && e.shiftKey)) {
-      // Add newline
-      e.preventDefault();
-      const start = input.selectionStart;
-      input.value = input.value.slice(0, start) + "\n" + input.value.slice(start);
-      input.selectionStart = input.selectionEnd = start + 1;
-    } else {
-      // Send message
-      form.requestSubmit();
-    }
-  }
-});
-
-const msg = {
-  text,
-  replyTo,
-  time: new Date().toLocaleTimeString(),
-  sender: 'me', // Mark message from local device
-};
